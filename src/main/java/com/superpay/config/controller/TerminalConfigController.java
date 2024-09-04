@@ -25,7 +25,7 @@ public class TerminalConfigController {
         return terminalConfigService.createOrUpdateConfig(config);
     }
 
-    @DeleteMapping("/{terminalId}/{configKey}")
+    @DeleteMapping("/{terminalId}/{code}")
     public ResponseEntity<Void> deleteConfig(@PathVariable String terminalId, @PathVariable String code) {
         terminalConfigService.deleteConfig(terminalId, code);
         return ResponseEntity.noContent().build();

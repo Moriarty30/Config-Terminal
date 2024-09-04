@@ -1,19 +1,37 @@
 package com.superpay.config.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "terminal_configs")
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@Entity(name = "terminals_configs")
 public class TerminalConfigEntity {
-
     @Id
-    private String terminalId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id")
+    private String id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "terminal_id", nullable = false)
+    public TerminalEntity terminalEntity;
+    @Column(name = "code")
     private String code;
-    private String configValue;
+    @Column(name = "type")
+    private String type;
+    @Column(name = "value")
+    private String value;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @Column(name = "created_at_tz")
+    private LocalDateTime createdAtTz;
+    @Column(name = "tag")
+    private String tag;
 }

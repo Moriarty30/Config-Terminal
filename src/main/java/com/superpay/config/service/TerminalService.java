@@ -1,55 +1,38 @@
 package com.superpay.config.service;
 
 import com.superpay.config.dtos.TerminalDTO;
-import com.superpay.config.dtos.requests.CreateTerminalRequest;
 import com.superpay.config.entity.TerminalEntity;
-import com.superpay.config.exception.CustomException;
 import com.superpay.config.mappers.TerminalMapper;
 import com.superpay.config.repository.TerminalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TerminalService {
 
-    @Autowired
-    private TerminalRepository terminalRepository;
+    private final TerminalRepository terminalRepository;
+    private final TerminalMapper terminalMapper;
 
     @Autowired
-    private TerminalMapper terminalMapper;
-
-    public List<TerminalEntity> getAllTerminals() {
-        return terminalRepository.findAll();
+    public TerminalService(TerminalRepository terminalRepository, TerminalMapper terminalMapper) {
+        this.terminalRepository = terminalRepository;
+        this.terminalMapper = terminalMapper;
     }
 
-    public List<TerminalEntity> getTerminalsByIds(List<String> ids) {
-        return terminalRepository.findAllById(ids);
+    public TerminalDTO createOrUpdateTerminal(TerminalDTO terminalDTO) {
+        TerminalEntity terminalEntity = terminalMapper.mapDTOToTerminalEntity(terminalDTO);
+        TerminalEntity savedTerminal = terminalRepository.save(terminalEntity);
+        return terminalMapper.mapTerminalEntityToDTO(savedTerminal);
     }
 
-    public TerminalEntity getTerminalById(String idOrName) throws CustomException {
-        TerminalEntity terminalEntity = terminalRepository.findByIdOrName(idOrName);
-        if (terminalEntity != null) {
-            return terminalEntity;
-        } else {
-            throw CustomException.builder()
-                    .code("CONF_0001")
-                    .message("Terminal not found")
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build();
-        }
-    }
-
-    public TerminalDTO createOrUpdateTerminal(CreateTerminalRequest createTerminalRequest) {
-        TerminalEntity terminalEntityToSave = this.terminalMapper.mapCreateTerminalRequestToEnt(createTerminalRequest);
-        TerminalEntity terminalEntitySaved = terminalRepository.saveAndFlush(terminalEntityToSave);
-        return this.terminalMapper.mapTerminalEntToDTO(terminalEntitySaved);
-    }
-
-    public void deleteTerminal(String id) {
-        terminalRepository.deleteById(id);
+    public List<TerminalDTO> getTerminalsByIds(Set<String> ids) {
+        List<TerminalEntity> terminals = terminalRepository.findAllById(ids);
+        return terminals.stream()
+                .map(terminalMapper::mapTerminalEntityToDTO)
+                .collect(Collectors.toList());
     }
 }

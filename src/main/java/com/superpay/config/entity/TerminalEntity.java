@@ -1,24 +1,49 @@
 package com.superpay.config.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "terminals")
-@Getter
-@Setter
-public class TerminalEntity {
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@Entity(name = "terminals")
+public class TerminalEntity {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "id")
     private String id;
-    private String name;
-    private String location;
-    private boolean active;
+
+    @Column(name = "code")
+    @Builder.Default private String code = "00000";
+
+    @Column(name = "enabled")
+    @Builder.Default private Boolean enabled = false;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commerce_id", nullable = false)
+    @JsonIgnoreProperties("terminals")
+    public CommerceEntity commerceEntity;
+
+    @Column(name = "created_at")
+    @Builder.Default private LocalDateTime createdAt = LocalDateTime.now();
+
+    @ManyToMany
+    @JoinTable(
+            name = "terminals_payment_methods",
+            joinColumns = @JoinColumn(name = "terminal_id"),
+            inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
+    private Set<PaymentMethodEntity> paymentMethods = new HashSet<>();
+
+    //@OneToMany(mappedBy = "terminalEntity", fetch = FetchType.LAZY)
+    //private List<TerminalConfigEntity> configs;
 }

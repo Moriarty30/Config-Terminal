@@ -18,7 +18,7 @@ public class TerminalConfigService {
     }
 
     public List<TerminalConfigEntity> getConfigsForTerminal(String terminalId) {
-        return terminalConfigRepository.findAllByTerminalId(terminalId);
+        return terminalConfigRepository.findAllByTerminalEntity_Id(terminalId);
     }
 
     public TerminalConfigEntity createOrUpdateConfig(TerminalConfigEntity config) {
@@ -26,6 +26,6 @@ public class TerminalConfigService {
     }
 
     public void deleteConfig(String terminalId, String code) {
-        terminalConfigRepository.deleteByTerminalIdAndCode(terminalId, code);
+        terminalConfigRepository.deleteByTerminalEntity_IdAndCode(terminalId, code);
     }
 }

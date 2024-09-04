@@ -6,18 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TerminalDTO {
+public class TerminalConfigDTO {
     private String id;
+    private String terminalId;
     private String code;
-    private Boolean enabled;
-    private String merchantId;
+    private String type;
+    private String value;
     private LocalDateTime createdAt;
-    private Set<PaymentMethodDTO> paymentMethods;
-    private Set<TerminalConfigDTO> configs;
 }
