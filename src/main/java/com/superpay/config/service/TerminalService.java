@@ -1,5 +1,6 @@
 package com.superpay.config.service;
 
+import com.superpay.config.dtos.ByIds;
 import com.superpay.config.dtos.TerminalDTO;
 import com.superpay.config.entity.TerminalEntity;
 import com.superpay.config.mappers.TerminalMapper;
@@ -7,6 +8,7 @@ import com.superpay.config.repository.TerminalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,10 +31,11 @@ public class TerminalService {
         return terminalMapper.mapTerminalEntityToDTO(savedTerminal);
     }
 
-    public List<TerminalDTO> getTerminalsByIds(Set<String> ids) {
-        List<TerminalEntity> terminals = terminalRepository.findAllById(ids);
-        return terminals.stream()
+    public Set<TerminalDTO> getTerminalsByIds(ByIds byIds) {
+        Set<String> ids = new HashSet<>(byIds.getIds());
+        return terminalRepository.findByIdIn(ids)
+                .stream()
                 .map(terminalMapper::mapTerminalEntityToDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

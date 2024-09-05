@@ -1,6 +1,6 @@
 package com.superpay.config.controller;
 import com.superpay.config.dtos.PaymentMethodDTO;
-import com.superpay.config.service.PaymentMethodServise;
+import com.superpay.config.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/payment-method")
 public class PaymentMethodController {
 
-        private final PaymentMethodServise paymentMethodServise;
+        private final PaymentMethodService paymentMethodServise;
 
         @Autowired
-        public PaymentMethodController(PaymentMethodServise paymentMethodServise) {
+        public PaymentMethodController(PaymentMethodService paymentMethodServise) {
             this.paymentMethodServise = paymentMethodServise;
         }
 

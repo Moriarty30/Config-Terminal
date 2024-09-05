@@ -12,6 +12,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ByIds {
-    private List<String> ids;
+
+    private List<String> ids;  // Cambiar de Set a List
+
+    // Getters y setters
+    public List<String> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<String> ids) {
+        this.ids = ids;
+    }
 }
 

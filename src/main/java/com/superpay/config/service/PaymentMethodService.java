@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PaymentMethodServise {
+public class PaymentMethodService {
 
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentMethodMapper paymentMethodMapper;
 
     @Autowired
-    public PaymentMethodServise(PaymentMethodRepository paymentMethodRepository, PaymentMethodMapper paymentMethodMapper) {
+    public PaymentMethodService(PaymentMethodRepository paymentMethodRepository, PaymentMethodMapper paymentMethodMapper) {
         this.paymentMethodRepository = paymentMethodRepository;
         this.paymentMethodMapper = paymentMethodMapper;
     }
@@ -25,5 +25,8 @@ public class PaymentMethodServise {
         return paymentMethodMapper.mapPaymentMethodEntityToDTO(savedPaymentMethod);
     }
 
+    public void deletePaymentMethodById(String id) {
+        paymentMethodRepository.deleteById(id);
+    }
     //agregar delete
 }

@@ -28,9 +28,8 @@ public class TerminalController {
     }
 
     @PostMapping("/by-ids")
-    public ResponseEntity<List<TerminalDTO>> getTerminalsByIds(@RequestBody ByIds idsRequest) {
-        Set<String> ids = (Set<String>) idsRequest.getIds();
-        List<TerminalDTO> terminals = terminalService.getTerminalsByIds(ids);
+    public ResponseEntity<Set<TerminalDTO>> getTerminalsByIds(@RequestBody ByIds byIds) {
+        Set<TerminalDTO> terminals = terminalService.getTerminalsByIds(byIds);
         return ResponseEntity.ok(terminals);
     }
 }

@@ -28,22 +28,20 @@ public class TerminalEntity {
     @Column(name = "enabled")
     @Builder.Default private Boolean enabled = false;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commerce_id", nullable = false)
-    @JsonIgnoreProperties("terminals")
-    public CommerceEntity commerceEntity;
-
     @Column(name = "created_at")
     @Builder.Default private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commerce_id", nullable = false)
+    private CommerceEntity commerceEntity;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "terminals_payment_methods",
             joinColumns = @JoinColumn(name = "terminal_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     private Set<PaymentMethodEntity> paymentMethods = new HashSet<>();
 
-    //@OneToMany(mappedBy = "terminalEntity", fetch = FetchType.LAZY)
-    //private List<TerminalConfigEntity> configs;
+    @OneToMany(mappedBy = "terminalEntity", fetch = FetchType.EAGER)
+    private Set<TerminalConfigEntity> configs = new HashSet<>();
 }
