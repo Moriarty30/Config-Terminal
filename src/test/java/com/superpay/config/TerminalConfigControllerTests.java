@@ -1,8 +1,6 @@
 package com.superpay.config;
 
-import com.superpay.config.controller.TerminalConfigController;
 import com.superpay.config.entity.TerminalConfigEntity;
-import com.superpay.config.service.TerminalConfigService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

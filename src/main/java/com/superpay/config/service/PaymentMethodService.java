@@ -28,5 +28,10 @@ public class PaymentMethodService {
     public void deletePaymentMethodById(String id) {
         paymentMethodRepository.deleteById(id);
     }
+
+    public PaymentMethodDTO getPaymentMethodById(PaymentMethodDTO paymentMethodDTO) {
+        PaymentMethodEntity paymentMethodEntity = paymentMethodRepository.findById(paymentMethodDTO.getId()).orElse(null);
+        return paymentMethodMapper.mapPaymentMethodEntityToDTO(paymentMethodEntity);
+    }
     //agregar delete
 }

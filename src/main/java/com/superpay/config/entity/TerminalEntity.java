@@ -1,7 +1,6 @@
 package com.superpay.config.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,10 +17,8 @@ import java.util.Set;
 @Entity(name = "terminals")
 public class TerminalEntity {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "id")
-    private String id;
+    @Builder.Default private String id = UUID.randomUUID().toString();
 
     @Column(name = "code")
     @Builder.Default private String code = "00000";

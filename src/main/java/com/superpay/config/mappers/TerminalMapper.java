@@ -1,15 +1,14 @@
 package com.superpay.config.mappers;
 
 import com.superpay.config.dtos.TerminalDTO;
+import com.superpay.config.dtos.requests.TerminalRequest;
 import com.superpay.config.entity.TerminalEntity;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses =  {PaymentMethodMapper.class})
 public interface TerminalMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -17,8 +16,8 @@ public interface TerminalMapper {
     TerminalDTO mapTerminalEntityToDTO(TerminalEntity terminalEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
+    //@Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "paymentMethods", ignore = true)
-    TerminalEntity mapDTOToTerminalEntity(TerminalDTO terminalDTO);
+    TerminalEntity mapDTOToTerminalEntity(TerminalRequest request);
 }

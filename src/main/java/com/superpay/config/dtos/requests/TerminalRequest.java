@@ -1,4 +1,4 @@
-package com.superpay.config.dtos;
+package com.superpay.config.dtos.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,23 +10,15 @@ import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class TerminalDTO {
-    @JsonProperty(value = "id")
-    private String id;
+@AllArgsConstructor
+public class TerminalRequest {
     @JsonProperty(value = "code")
     private String code;
     @JsonProperty(value = "enabled")
     private Boolean enabled;
-    @JsonProperty(value = "merchantId")
-    private String merchantId;
+    @JsonProperty(value = "commerceId")
+    private String commerceId;
     @JsonProperty(value = "paymentMethods")
-    private List<PaymentMethodDTO> paymentMethods;
-    @JsonProperty(value = "configs")
-    private List<ConfigTerminalDTO> configs;
-
-
-
-
+    private List<String> paymentMethods;
 }

@@ -25,5 +25,13 @@ public class CommerceService {
         return commerceMapper.mapCommerceEntityToDTO(savedCommerce);
     }
 
+   public CommerceDTO getCommerceById(CommerceDTO commerceDTO) {
+    CommerceEntity commerceEntity = commerceRepository.findById(commerceDTO.getId()).orElse(null);
+    if (commerceEntity != null) {
+        return commerceMapper.mapCommerceEntityToDTO(commerceEntity);
+    }
+    return null;
+}
+
     //agregar delete
 }

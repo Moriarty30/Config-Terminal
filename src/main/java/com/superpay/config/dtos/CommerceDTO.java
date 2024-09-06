@@ -24,6 +24,6 @@ public class CommerceDTO {
     @JsonProperty(value = "address")
     private String address;
     @JsonProperty(value = "terminals")
-    private List<TerminalDTO> terminals;
+    private List<ConfigTerminalDTO> terminals;
 }
 

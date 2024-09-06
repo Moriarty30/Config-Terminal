@@ -24,5 +24,11 @@ public class PaymentMethodController {
             return ResponseEntity.ok(createdPaymentMethod);
         }
 
+        @PostMapping("/by-ids")
+        public ResponseEntity<PaymentMethodDTO> getPaymentMethodById(@RequestBody PaymentMethodDTO paymentMethodDTO) {
+            PaymentMethodDTO createdPaymentMethod = paymentMethodServise.getPaymentMethodById(paymentMethodDTO);
+            return ResponseEntity.ok(createdPaymentMethod);
+        }
+
         //Falta más metodods, findbyid, delete, etc
 }

@@ -23,5 +23,10 @@ public class CommerceController {
         return ResponseEntity.ok(createdCommerce);
     }
 
+    @PostMapping("/by-ids")
+    public ResponseEntity<CommerceDTO> getCommerceById(@RequestBody CommerceDTO commerceDTO) {
+        CommerceDTO createdCommerce = commerceService.getCommerceById(commerceDTO);
+        return ResponseEntity.ok(createdCommerce);
+    }
     //Falta más metodods, findbyid, delete, etc
 }

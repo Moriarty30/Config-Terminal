@@ -1,20 +1,5 @@
 package com.superpay.config;
 
-import com.superpay.config.entity.TerminalConfigEntity;
-import com.superpay.config.repository.TerminalConfigRepository;
-import com.superpay.config.service.TerminalConfigService;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 class TerminalConfigServiceTests {
 /*
     @Mock
