@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TerminalService {
@@ -40,19 +39,26 @@ public class TerminalService {
 
     public TerminalDTO createOrUpdateTerminal(TerminalRequest terminalRequest) {
         TerminalEntity terminalEntityToSave = this.terminalMapper.mapDTOToTerminalEntity(terminalRequest);
-        CommerceEntity commerceEntity = this.commerceRepository.findById(terminalRequest.getCommerceId()).orElse(null);
+        CommerceEntity commerceEntity = this.commerceRepository.getCommerceByIdOrNit(terminalRequest.getCommerceId());
+        TerminalPaymentMethodEntity terminalPaymentMethodEntity = this.terminalPaymentMethodRepository.getTerminalPaymentMethodEntitiesById(terminalEntityToSave.getId());
+        System.out.println("terminalPaymentMethodRepository: " + terminalPaymentMethodRepository);
         terminalEntityToSave.setCommerceEntity(commerceEntity);
 
         TerminalEntity terminalEntitySaved = this.terminalRepository.saveAndFlush(terminalEntityToSave);
+
         List<PaymentMethodEntity> paymentMethodEntities = new ArrayList<>();
+
         for (String paymentMethodId : terminalRequest.getPaymentMethods()) {
-            PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.findById(paymentMethodId).orElse(null);
+            PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.getPaymentMethodEntitiesByid(terminalRequest.getPaymentMethods());
+
             if (paymentMethodEntity != null) {
                 this.assignPaymentMethod(terminalEntitySaved.getId(), paymentMethodId);
                 paymentMethodEntities.add(paymentMethodEntity);
             }
         }
         terminalEntitySaved.setPaymentMethods(new HashSet<>(paymentMethodEntities));
+        //terminalEntitySaved.setConfigs();
+        System.out.println("terminalEntitySaved: " + terminalEntitySaved);
         return this.terminalMapper.mapTerminalEntityToDTO(terminalEntitySaved);
     }
 
@@ -80,7 +86,7 @@ public class TerminalService {
             List<PaymentMethodEntity> paymentMethodEntities = this.paymentMethodRepository.findAllById(paymentMethodsIds);
 
             List<TerminalPaymentMethodEntity> terminalPaymentMethodEntities = terminalAssigns.stream().filter(terminalPaymentMethodEntity -> terminalPaymentMethodEntity.getTerminalId().equals(terminalEntity.getId())).toList();
-            List<PaymentMethodEntity> terminalPaymentMethods = terminalPaymentMethodEntities.stream().map(terminalPaymentMethodEntity -> paymentMethodEntities.stream().filter(paymentMethodEntity -> paymentMethodEntity.getId().equals(terminalPaymentMethodEntity.getPaymentMethodId())).findFirst().orElse(null)).collect(Collectors.toList());
+            List<PaymentMethodEntity> terminalPaymentMethods = terminalPaymentMethodEntities.stream().map(terminalPaymentMethodEntity -> paymentMethodEntities.stream().filter(paymentMethodEntity -> paymentMethodEntity.getId().equals(terminalPaymentMethodEntity.getPaymentMethodId())).findFirst().orElse(null)).toList();
             terminalEntity.setPaymentMethods(new HashSet<>(terminalPaymentMethods));
 
             List<TerminalConfigEntity> terminalConfigEntities = this.terminalConfigRepository.getTerminalConfigs(terminalEntity.getId());
@@ -94,8 +100,6 @@ public class TerminalService {
         return terminalDTOS;
     }
 
-    public void deleteTerminalById(String terminalId) {
-        this.terminalRepository.deleteById(terminalId);
-    }
+
 
 }

@@ -15,6 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,10 +24,8 @@ import java.util.List;
 @Entity(name = "commerces")
 public class CommerceEntity {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "id")
-    private String id;
+    @Builder.Default private String id = UUID.randomUUID().toString();
     @Column(name = "name")
     @Builder.Default private String name = "Unnamed";
     @Column(name = "nit")

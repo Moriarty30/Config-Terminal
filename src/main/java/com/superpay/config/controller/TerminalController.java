@@ -49,9 +49,4 @@ public class TerminalController {
         return this.terminalService.getTerminalsByIdsOrCodes(byIds);
     }
 
-    @DeleteMapping("/{terminalId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteTerminalById(@PathVariable String terminalId) {
-        this.terminalService.deleteTerminalById(terminalId);
-    }
 }

@@ -23,4 +23,6 @@ public interface TerminalConfigMapper {
     @IterableMapping(qualifiedByName = "mapTerminalConfigEntToDTO")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     List<ConfigTerminalDTO> map(List<TerminalConfigEntity> configEntities);
-}
+
+    ConfigTerminalDTO getTerminalConfigByid(String id);
+}a

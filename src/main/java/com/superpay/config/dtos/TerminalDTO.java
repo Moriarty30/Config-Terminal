@@ -19,7 +19,7 @@ public class TerminalDTO {
     private String code;
     @JsonProperty(value = "enabled")
     private Boolean enabled;
-    @JsonProperty(value = "merchantId")
+    @JsonProperty(value = "commerceId")
     private String merchantId;
     @JsonProperty(value = "paymentMethods")
     private List<PaymentMethodDTO> paymentMethods;

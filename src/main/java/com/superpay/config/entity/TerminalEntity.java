@@ -33,13 +33,13 @@ public class TerminalEntity {
     @JoinColumn(name = "commerce_id", nullable = false)
     private CommerceEntity commerceEntity;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "terminals_payment_methods",
             joinColumns = @JoinColumn(name = "terminal_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     private Set<PaymentMethodEntity> paymentMethods = new HashSet<>();
 
-    @OneToMany(mappedBy = "terminalEntity", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "terminalEntity", fetch = FetchType.LAZY)
     private Set<TerminalConfigEntity> configs = new HashSet<>();
 }

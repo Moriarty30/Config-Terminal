@@ -1,15 +1,26 @@
 package com.superpay.config.mappers;
 
 import com.superpay.config.dtos.CommerceDTO;
+import com.superpay.config.dtos.requests.CommerceRequest;
 import com.superpay.config.entity.CommerceEntity;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommerceMapper {
 
-    // Mapea de CommerceEntity a CommerceDTO
-    CommerceDTO mapCommerceEntityToDTO(CommerceEntity commerceEntity);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "terminals", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    CommerceEntity mapCommerceEntityToDTO(CommerceRequest request);
 
-    // Mapea de CommerceDTO a CommerceEntity
-    CommerceEntity mapDTOToCommerceEntity(CommerceDTO commerceDTO);
+    @Named("mapCommerceEntToDTO")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    CommerceDTO mapDTOToCommerceEntity(CommerceEntity entity);
+
+    @Named("mapCommerceEntListToDTOList")
+    @IterableMapping(qualifiedByName = "mapCommerceEntToDTO")
+    List<CommerceDTO> mapCommerces(List<CommerceEntity> commerceEntityList);
 }

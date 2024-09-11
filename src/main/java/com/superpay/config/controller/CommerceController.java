@@ -1,32 +1,31 @@
 package com.superpay.config.controller;
 
 import com.superpay.config.dtos.CommerceDTO;
+import com.superpay.config.dtos.requests.CommerceRequest;
 import com.superpay.config.service.CommerceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/commerce")
 public class CommerceController {
 
-    private final CommerceService commerceService;
-
     @Autowired
-    public CommerceController(CommerceService commerceService) {
-        this.commerceService = commerceService;
-    }
+    CommerceService commerceService;
 
-    @PostMapping
-    public ResponseEntity<CommerceDTO> createCommerce(@RequestBody CommerceDTO commerceDTO) {
-        CommerceDTO createdCommerce = commerceService.createOrUpdateCommerce(commerceDTO);
-        return ResponseEntity.ok(createdCommerce);
+    @PostMapping("/NewCommerce")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommerceDTO saveCommerce(@RequestBody CommerceRequest commerceRequest) {
+        return this.commerceService.createOrUpdateCommerce(commerceRequest);
     }
-
-    @PostMapping("/by-ids")
-    public ResponseEntity<CommerceDTO> getCommerceById(@RequestBody CommerceDTO commerceDTO) {
-        CommerceDTO createdCommerce = commerceService.getCommerceById(commerceDTO);
-        return ResponseEntity.ok(createdCommerce);
+    /*
+    @GetMapping("/{commerceIdOrNit}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommerceDTO getCommerceByIdOrNit(@PathVariable String commerceIdOrNit) {
+        return this.commerceService.getCommerceByIdOrNit(commerceIdOrNit);
     }
     //Falta más metodods, findbyid, delete, etc
+
+     */
 }

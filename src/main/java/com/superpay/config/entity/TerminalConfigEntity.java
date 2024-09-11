@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -15,10 +16,8 @@ import java.time.LocalDateTime;
 @Entity(name = "terminals_configs")
 public class TerminalConfigEntity {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "id")
-    private String id;
+    @Builder.Default private String id = UUID.randomUUID().toString();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "terminal_id", nullable = false)
     public TerminalEntity terminalEntity;
