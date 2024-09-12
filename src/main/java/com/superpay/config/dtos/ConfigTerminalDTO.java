@@ -21,6 +21,6 @@ public class ConfigTerminalDTO {
     private String value;
     private LocalDateTime createdAt;
     private LocalDateTime createdAtTz;
-    private String tag;
+    //private String tag;
 
 }

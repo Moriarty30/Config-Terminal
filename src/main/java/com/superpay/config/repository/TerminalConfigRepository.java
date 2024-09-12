@@ -1,6 +1,7 @@
 package com.superpay.config.repository;
 
 import com.superpay.config.entity.TerminalConfigEntity;
+import com.superpay.config.entity.TerminalEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,4 +14,9 @@ public interface TerminalConfigRepository extends JpaRepository<TerminalConfigEn
 
     @Query(value = "select * from terminals_configs where terminal_id = (:terminalId) order by created_at desc", nativeQuery = true)
     List<TerminalConfigEntity> getTerminalConfigs(@Param("terminalId") String terminalId);
+
+    List<TerminalConfigEntity> findByTerminalEntity_Id(String terminalId);
+
+    @Query(value = "select * from terminals_configs where terminal_id = :terminalId and code = :code limit 1", nativeQuery = true)
+    TerminalConfigEntity findByTerminalIdAndCode(@Param("terminalId") String terminalId, @Param("code") String code);
 }

@@ -2,12 +2,8 @@ package com.superpay.config.mappers;
 
 import com.superpay.config.dtos.ConfigTerminalDTO;
 import com.superpay.config.entity.TerminalConfigEntity;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
+
 
 import java.util.List;
 
@@ -24,5 +20,14 @@ public interface TerminalConfigMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     List<ConfigTerminalDTO> map(List<TerminalConfigEntity> configEntities);
 
-    ConfigTerminalDTO getTerminalConfigByid(String id);
-}a
+    // Mapear de TerminalConfigEntity a ConfigTerminalDTO, extrayendo el terminalId desde la entidad TerminalEntity
+    @Mapping(source = "terminalEntity.id", target = "terminalId")
+    ConfigTerminalDTO mapToDTO(TerminalConfigEntity entity);
+
+    TerminalConfigEntity mapToEntity(ConfigTerminalDTO dto);
+
+    @Mapping(source = "terminalEntity.id", target = "terminalId")
+    List<ConfigTerminalDTO> mapToDTO(List<TerminalConfigEntity> entities);
+
+    List<TerminalConfigEntity> mapToEntity(List<ConfigTerminalDTO> dtos);
+}

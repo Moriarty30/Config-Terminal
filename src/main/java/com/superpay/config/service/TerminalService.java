@@ -40,8 +40,6 @@ public class TerminalService {
     public TerminalDTO createOrUpdateTerminal(TerminalRequest terminalRequest) {
         TerminalEntity terminalEntityToSave = this.terminalMapper.mapDTOToTerminalEntity(terminalRequest);
         CommerceEntity commerceEntity = this.commerceRepository.getCommerceByIdOrNit(terminalRequest.getCommerceId());
-        TerminalPaymentMethodEntity terminalPaymentMethodEntity = this.terminalPaymentMethodRepository.getTerminalPaymentMethodEntitiesById(terminalEntityToSave.getId());
-        System.out.println("terminalPaymentMethodRepository: " + terminalPaymentMethodRepository);
         terminalEntityToSave.setCommerceEntity(commerceEntity);
 
         TerminalEntity terminalEntitySaved = this.terminalRepository.saveAndFlush(terminalEntityToSave);
@@ -57,7 +55,6 @@ public class TerminalService {
             }
         }
         terminalEntitySaved.setPaymentMethods(new HashSet<>(paymentMethodEntities));
-        //terminalEntitySaved.setConfigs();
         System.out.println("terminalEntitySaved: " + terminalEntitySaved);
         return this.terminalMapper.mapTerminalEntityToDTO(terminalEntitySaved);
     }
