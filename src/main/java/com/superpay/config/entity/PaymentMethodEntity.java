@@ -1,15 +1,13 @@
 package com.superpay.config.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -23,8 +21,10 @@ import java.util.UUID;
 @Entity(name = "payment_methods")
 public class PaymentMethodEntity {
     @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "id")
-    @Builder.Default private String id = UUID.randomUUID().toString();
+    private String id;;
     @Column(name = "name")
     @Builder.Default private String name = "Unnamed";
     @Column(name = "code")
