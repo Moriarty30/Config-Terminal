@@ -18,6 +18,6 @@ public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEnti
             "where t.code = (:terminalId) and t.enabled = true and pm.enabled = true", nativeQuery = true)
     List<PaymentMethodEntity> getTerminalPaymentMethods(String terminalId);
 
-    @Query(value = "select * from payment_methods where id = :paymentMethodId", nativeQuery = true)
+    @Query(value = "select * from payment_methods where id = :paymentMethodId or code =: paymentMethodId", nativeQuery = true)
     PaymentMethodEntity getPaymentMethodEntitiesByid(@Param("paymentMethodId") List paymentMethodId);
 }

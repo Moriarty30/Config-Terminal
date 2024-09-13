@@ -28,20 +28,6 @@ public class TerminalController {
         return this.terminalService.createOrUpdateTerminal(terminalRequest);
     }
 
-    @GetMapping("/{terminalIdOrCode}")
-    @ResponseStatus(HttpStatus.OK)
-    public TerminalDTO getTerminalByIdOrCode(@PathVariable Optional<String> terminalIdOrCode) throws CustomException {
-        if (terminalIdOrCode.isPresent()){
-            ByIds byIds = new ByIds();
-            byIds.setIds(List.of(terminalIdOrCode.get()));
-            List<TerminalDTO> terminals = this.terminalService.getTerminalsByIdsOrCodes(byIds);
-            if (!terminals.isEmpty()) {
-                return terminals.get(0);
-            }
-            throw new CustomException("ROUTER_ERROR_001", "Terminal not found", HttpStatus.BAD_REQUEST);
-        }
-        throw new CustomException("ROUTER_ERROR_001", "Terminal id empty", HttpStatus.BAD_REQUEST);
-    }
 
     @PostMapping("/by-ids")
     @ResponseStatus(HttpStatus.OK)

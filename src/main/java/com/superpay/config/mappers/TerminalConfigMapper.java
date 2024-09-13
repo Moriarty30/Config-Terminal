@@ -20,7 +20,7 @@ public interface TerminalConfigMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     List<ConfigTerminalDTO> map(List<TerminalConfigEntity> configEntities);
 
-    // Mapear de TerminalConfigEntity a ConfigTerminalDTO, extrayendo el terminalId desde la entidad TerminalEntity
+
     @Mapping(source = "terminalEntity.id", target = "terminalId")
     ConfigTerminalDTO mapToDTO(TerminalConfigEntity entity);
 
@@ -29,5 +29,5 @@ public interface TerminalConfigMapper {
     @Mapping(source = "terminalEntity.id", target = "terminalId")
     List<ConfigTerminalDTO> mapToDTO(List<TerminalConfigEntity> entities);
 
-    List<TerminalConfigEntity> mapToEntity(List<ConfigTerminalDTO> dtos);
+    //List<TerminalConfigEntity> mapToEntity(List<ConfigTerminalDTO> dtos);
 }

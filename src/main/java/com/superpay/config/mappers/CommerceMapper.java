@@ -20,7 +20,9 @@ public interface CommerceMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     CommerceDTO mapDTOToCommerceEntity(CommerceEntity entity);
 
+    /*
     @Named("mapCommerceEntListToDTOList")
     @IterableMapping(qualifiedByName = "mapCommerceEntToDTO")
     List<CommerceDTO> mapCommerces(List<CommerceEntity> commerceEntityList);
+    */
 }

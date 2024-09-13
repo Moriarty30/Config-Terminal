@@ -14,6 +14,6 @@ public interface PaymentMethodMapper {
     PaymentMethodDTO mapPaymentMethodEntityToDTO(PaymentMethodEntity paymentMethodEntity);
 
     PaymentMethodEntity mapDTOToPaymentMethodEntity(PaymentMethodDTO paymentMethodDTO);
-    
 
+    List<PaymentMethodDTO> toDtoList(List<PaymentMethodEntity> paymentMethodEntities);
 }

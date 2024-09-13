@@ -14,5 +14,7 @@ public interface TerminalPaymentMethodRepository extends JpaRepository<TerminalP
     @Query(value = "select * from terminals_payment_methods where terminal_id in (:terminalsIds)", nativeQuery = true)
     List<TerminalPaymentMethodEntity> getTerminalPaymentMethodsByTerminalsIds(@Param("terminalsIds") List<String> terminalsIds);
 
+    @Query(value = "select * from terminals_payment_methods where terminal_id in (:terminalsIds)", nativeQuery = true)
+    List<TerminalPaymentMethodEntity> findByTerminalId(@Param("terminalsIds") String terminalsIds);
 }
 

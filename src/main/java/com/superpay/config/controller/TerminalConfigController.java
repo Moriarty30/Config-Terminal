@@ -16,13 +16,13 @@ public class TerminalConfigController {
     @Autowired
     private TerminalConfigService terminalConfigService;
 
-    // Endpoint para crear o actualizar una configuración de terminal
+
     @PostMapping("/create-or-update")
     @ResponseStatus(HttpStatus.CREATED)
     public ConfigTerminalDTO createOrUpdateTerminalConfig(@RequestBody ConfigTerminalRequest request) {
         return terminalConfigService.createOrUpdateTerminalConfig(request);
     }
-
+/*
     // Endpoint para obtener una configuración de terminal por terminalId y código
     @GetMapping("/{terminalId}/{code}")
     @ResponseStatus(HttpStatus.OK)
@@ -36,4 +36,6 @@ public class TerminalConfigController {
     public List<ConfigTerminalDTO> getConfigsByTerminalId(@PathVariable String terminalId) {
         return terminalConfigService.getConfigsByTerminalId(terminalId);
     }
+
+ */
 }

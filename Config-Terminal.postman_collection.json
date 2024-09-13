@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "b4117b5c-615c-46c9-9200-5cad639b7a2b",
+		"name": "Config-Terminal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23532052"
+	},
+	"item": [
+		{
+			"name": "Get pymentMethod",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/terminals/terminal-1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"terminals",
+						"terminal-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get terminals by ids",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ids\": [\"26083\",\"26084\",\"26085\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/terminals/by-ids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"terminals",
+						"by-ids"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create comerce",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Superpagos\",\r\n  \"nit\": \"123456789\",\r\n  \"address\": \"Firenze\",\r\n  \"enabled\": true\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/commerce",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"commerce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear terminal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"code\": \"26085\",                        // Código único del terminal\r\n  \"enabled\": true,                        // Estado del terminal (habilitado o no)\r\n  \"commerceId\": \"e728c916-f312-4255-afbc-e46ae85a4d9f\",  // ID del comerciante asociado\r\n  \r\n  \"paymentMethods\": [\"5b5d1be1-3230-4c7f-8fb6-628b83ed1c00\"],\r\n\r\n  \"configs\": [                            // Lista de configuraciones del terminal\r\n    {\r\n      \"code\": \"WEBHOOK_NOTIFICATION_URL\",  // Código de configuración (por ejemplo, URL de notificaciones)\r\n      \"type\": \"STRING\",                    // Tipo de la configuración (STRING, INTEGER, etc.)\r\n      \"value\": \"https://webhook.site/eadad96f-d15f-4532-8e17-b21cc5d30390\"  // Valor de la configuración\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/terminals/newTerminal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"terminals",
+						"newTerminal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create payment-method",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"nequi\",\r\n  \"code\": \"123456789\",\r\n  \"urlLogo\": \"www.google.com\",\r\n  \"enabled\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/payment-method",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payment-method"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Commerce",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Superpagos\",\r\n    \"nit\":\"12345\",\r\n    \"enabled\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/commerce/NewCommerce",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"commerce",
+						"NewCommerce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create/update config",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"terminalId\": \"90408bb6-82ff-4ded-bb70-cfec836d828a\",\r\n    \"code\": \"WEBHOOK_NOTIFICATION_URL\",\r\n    \"type\": \"STRING\",\r\n    \"value\": \"https://webhook.site/eadad96f-d15f-4532-8e17-b21cc5d30390\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/terminal-config/create-or-update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"terminal-config",
+						"create-or-update"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
