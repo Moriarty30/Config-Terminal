@@ -7,8 +7,9 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses =  {PaymentMethodMapper.class})
+@Mapper(componentModel = "spring", uses =  {PaymentMethodMapper.class, TerminalConfigMapper.class})
 public interface TerminalMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -19,5 +20,6 @@ public interface TerminalMapper {
     //@Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "paymentMethods", ignore = true)
+    @Mapping(target = "configs", ignore = true)
     TerminalEntity mapDTOToTerminalEntity(TerminalRequest request);
 }

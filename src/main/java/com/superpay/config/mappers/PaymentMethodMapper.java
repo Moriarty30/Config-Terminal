@@ -14,11 +14,6 @@ public interface PaymentMethodMapper {
     PaymentMethodDTO mapPaymentMethodEntityToDTO(PaymentMethodEntity paymentMethodEntity);
 
     PaymentMethodEntity mapDTOToPaymentMethodEntity(PaymentMethodDTO paymentMethodDTO);
-
-    /*@Named("mapPaymentMethodsEntToDTO")
-    @IterableMapping(qualifiedByName = "mapPaymentMethodEntToDTO")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    */
-    List<PaymentMethodDTO> mapPaymentMethods(List<PaymentMethodEntity> entities);
+    
 
 }

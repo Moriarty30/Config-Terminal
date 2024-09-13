@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,8 +39,11 @@ public class TerminalEntity {
             name = "terminals_payment_methods",
             joinColumns = @JoinColumn(name = "terminal_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
-    private Set<PaymentMethodEntity> paymentMethods = new HashSet<>();
+    private List<PaymentMethodEntity> paymentMethods;
 
     @OneToMany(mappedBy = "terminalEntity", fetch = FetchType.LAZY)
-    private Set<TerminalConfigEntity> configs = new HashSet<>();
+    private List<TerminalConfigEntity> configs;
+
+
+
 }

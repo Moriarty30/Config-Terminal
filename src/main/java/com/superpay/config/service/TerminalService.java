@@ -3,6 +3,7 @@ package com.superpay.config.service;
 import com.superpay.config.dtos.ByIds;
 import com.superpay.config.dtos.ConfigTerminalDTO;
 import com.superpay.config.dtos.TerminalDTO;
+import com.superpay.config.dtos.requests.ConfigTerminalRequest;
 import com.superpay.config.dtos.requests.TerminalRequest;
 import com.superpay.config.entity.*;
 import com.superpay.config.mappers.TerminalConfigMapper;
@@ -11,6 +12,7 @@ import com.superpay.config.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -31,6 +33,7 @@ public class TerminalService {
     @Autowired
     TerminalPaymentMethodRepository terminalPaymentMethodRepository;
 
+
     @Autowired
     TerminalConfigRepository terminalConfigRepository;
 
@@ -38,57 +41,68 @@ public class TerminalService {
     TerminalConfigMapper terminalConfigMapper;
 
     public TerminalDTO createOrUpdateTerminal(TerminalRequest terminalRequest) {
-        // Mapear TerminalRequest a TerminalEntity
         TerminalEntity terminalEntityToSave = this.terminalMapper.mapDTOToTerminalEntity(terminalRequest);
 
-        // Buscar el CommerceEntity relacionado
-        CommerceEntity commerceEntity = this.commerceRepository.getCommerceByIdOrNit(terminalRequest.getCommerceId());
-        if (commerceEntity == null) {
-            throw new RuntimeException("Commerce not found with ID: " + terminalRequest.getCommerceId());
-        }
-        // Asignar el CommerceEntity al TerminalEntity
+        CommerceEntity commerceEntity = this.commerceRepository.findById(terminalRequest.getCommerceId()).orElse(null);
         terminalEntityToSave.setCommerceEntity(commerceEntity);
-        // Guardar el TerminalEntity en la base de datos
+
         TerminalEntity terminalEntitySaved = this.terminalRepository.saveAndFlush(terminalEntityToSave);
-        // Gestionar la asignación de métodos de pago
-        List<PaymentMethodEntity> paymentMethodEntities = assignPaymentMethods(terminalEntitySaved, terminalRequest.getPaymentMethods());
-        // Asignar los métodos de pago al TerminalEntity guardado
-        terminalEntitySaved.setPaymentMethods(new HashSet<>(paymentMethodEntities));
 
-        // Guardar nuevamente el TerminalEntity con los métodos de pago
-        this.terminalRepository.saveAndFlush(terminalEntitySaved);
-
-        // Mapear el TerminalEntity guardado a un TerminalDTO y devolverlo
-        return this.terminalMapper.mapTerminalEntityToDTO(terminalEntitySaved);
-    }
-
-    private List<PaymentMethodEntity> assignPaymentMethods(TerminalEntity terminalEntity, List<String> paymentMethodIds) {
-        List<PaymentMethodEntity> paymentMethodEntities = new ArrayList<>();
-
-        for (String paymentMethodId : paymentMethodIds) {
-            PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.findById(paymentMethodId)
-                    .orElseThrow(() -> new RuntimeException("Payment Method not found with ID: " + paymentMethodId));
-
-
-            boolean alreadyAssigned = this.terminalPaymentMethodRepository.existsByTerminalIdAndPaymentMethodId(terminalEntity.getId(), paymentMethodId);
-            if (!alreadyAssigned) {
-
-                TerminalPaymentMethodEntity terminalPaymentMethodEntity = TerminalPaymentMethodEntity.builder()
-                        .id(UUID.randomUUID().toString())
-                        .terminalId(terminalEntity.getId())
-                        .paymentMethodId(paymentMethodId)
-                        .build();
-
-                // Guardar la nueva relación
-                this.terminalPaymentMethodRepository.saveAndFlush(terminalPaymentMethodEntity);
+        List<TerminalConfigEntity> terminalConfigEntities = new ArrayList<>();
+        for(String configId : terminalRequest.getConfigs()){
+            TerminalConfigEntity terminalConfigEntity = this.terminalConfigRepository.findById(configId).orElse(null);
+            if(terminalConfigEntity != null){
+                this.assignTerminalConfig(terminalEntitySaved.getId(), configId);
+                terminalConfigEntities.add(terminalConfigEntity);
             }
-
-            // Añadir el método de pago a la lista de métodos
-            paymentMethodEntities.add(paymentMethodEntity);
         }
+        List<PaymentMethodEntity> paymentMethodEntities = new ArrayList<>();
+        for (String paymentMethodId : terminalRequest.getPaymentMethods()) {
+            PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.findById(paymentMethodId).orElse(null);
+            if (paymentMethodEntity != null) {
+                this.assignPaymentMethod(terminalEntitySaved.getId(), paymentMethodId);
+                paymentMethodEntities.add(paymentMethodEntity);
+            }
+        }
+        terminalEntitySaved.setPaymentMethods(paymentMethodEntities);
 
-        return paymentMethodEntities;
+        terminalEntitySaved.setConfigs(terminalConfigEntities);
+
+
+
+        TerminalDTO test= this.terminalMapper.mapTerminalEntityToDTO(terminalEntitySaved);
+        return test;
     }
+
+    public void assignPaymentMethod(String terminalId, String paymentMethodId) {
+        TerminalEntity terminalEntity = this.terminalRepository.findById(terminalId).orElse(null);
+        PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.findById(paymentMethodId).orElse(null);
+
+        if (terminalEntity != null && paymentMethodEntity != null) {
+            TerminalPaymentMethodEntity terminalPaymentMethodEntity = TerminalPaymentMethodEntity
+                    .builder()
+                    .paymentMethodId(paymentMethodId)
+                    .terminalId(terminalId)
+                    .build();
+            this.terminalPaymentMethodRepository.saveAndFlush(terminalPaymentMethodEntity);
+        }
+    }
+
+    public void assignTerminalConfig(String terminalId, String configId) {
+
+        TerminalEntity terminalEntity = this.terminalRepository.findById(terminalId).orElse(null);
+        TerminalConfigEntity terminalConfigEntity = this.terminalConfigRepository.findById(configId).orElse(null);
+
+        if (terminalEntity != null && terminalConfigEntity != null) {
+            terminalConfigEntity.setTerminalEntity(terminalEntity);
+            this.terminalConfigRepository.saveAndFlush(terminalConfigEntity);
+        } else {
+            if (terminalEntity == null) {
+                throw new RuntimeException("Terminal not found with ID: " + terminalId);
+            }
+        }
+    }
+
 
 
 
@@ -102,7 +116,7 @@ public class TerminalService {
 
             List<TerminalPaymentMethodEntity> terminalPaymentMethodEntities = terminalAssigns.stream().filter(terminalPaymentMethodEntity -> terminalPaymentMethodEntity.getTerminalId().equals(terminalEntity.getId())).toList();
             List<PaymentMethodEntity> terminalPaymentMethods = terminalPaymentMethodEntities.stream().map(terminalPaymentMethodEntity -> paymentMethodEntities.stream().filter(paymentMethodEntity -> paymentMethodEntity.getId().equals(terminalPaymentMethodEntity.getPaymentMethodId())).findFirst().orElse(null)).toList();
-            terminalEntity.setPaymentMethods(new HashSet<>(terminalPaymentMethods));
+            terminalEntity.setPaymentMethods(terminalPaymentMethods);
 
             List<TerminalConfigEntity> terminalConfigEntities = this.terminalConfigRepository.getTerminalConfigs(terminalEntity.getId());
             List<ConfigTerminalDTO> terminalConfigs = this.terminalConfigMapper.map(terminalConfigEntities);

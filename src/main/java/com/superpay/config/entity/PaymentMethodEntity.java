@@ -21,10 +21,8 @@ import java.util.UUID;
 @Entity(name = "payment_methods")
 public class PaymentMethodEntity {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "id")
-    private String id;;
+    @Builder.Default private String id = UUID.randomUUID().toString();
     @Column(name = "name")
     @Builder.Default private String name = "Unnamed";
     @Column(name = "code")

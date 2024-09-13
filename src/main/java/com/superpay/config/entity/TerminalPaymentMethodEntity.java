@@ -15,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Data
 @Builder
 @NoArgsConstructor
-@Entity(name = "terminal_payment_methods")
+@Entity(name = "terminals_payment_methods")
 public class TerminalPaymentMethodEntity {
     @Id
     @GeneratedValue(generator = "uuid")

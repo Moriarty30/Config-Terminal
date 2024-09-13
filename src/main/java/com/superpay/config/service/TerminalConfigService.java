@@ -24,32 +24,29 @@ public class TerminalConfigService {
     private TerminalConfigMapper terminalConfigMapper;
 
     @Autowired
-    private TerminalRepository terminalRepository; // Repositorio para obtener TerminalEntity
+    private TerminalRepository terminalRepository;
 
-    // Crear o actualizar la configuración de un terminal
+
     public ConfigTerminalDTO createOrUpdateTerminalConfig(ConfigTerminalRequest request) {
-        // Verificar si existe un terminal con el ID proporcionado
-        TerminalEntity terminalEntity = terminalRepository.findById(request.getTerminalId())
-                .orElseThrow(() -> new RuntimeException("Terminal not found with ID: " + request.getTerminalId()));
 
-        // Verificar si ya existe una configuración para este terminal y este código
+        TerminalEntity terminalEntity = terminalRepository.findById(request.getTerminalId()).orElse(null);
         TerminalConfigEntity existingConfig = terminalConfigRepository.findByTerminalIdAndCode(request.getTerminalId(), request.getCode());
 
         TerminalConfigEntity configEntityToSave;
 
         if (existingConfig != null) {
-            // Actualizar la configuración existente
+
             existingConfig.setType(request.getType());
             existingConfig.setValue(request.getValue());
-            existingConfig.setCreatedAt(LocalDateTime.now()); // Actualizamos la fecha de creación por si cambió
+            existingConfig.setCreatedAt(LocalDateTime.now());
             existingConfig.setCreatedAtTz(LocalDateTime.now());
 
             configEntityToSave = existingConfig;
         } else {
-            // Crear una nueva configuración si no existe
+
             configEntityToSave = TerminalConfigEntity.builder()
                     .id(UUID.randomUUID().toString())
-                    .terminalEntity(terminalEntity)  // Asignar la entidad TerminalEntity
+                    .terminalEntity(terminalEntity)
                     .code(request.getCode())
                     .type(request.getType())
                     .value(request.getValue())
@@ -58,14 +55,13 @@ public class TerminalConfigService {
                     .build();
         }
 
-        // Guardar o actualizar la configuración de terminal
+
         TerminalConfigEntity savedEntity = terminalConfigRepository.saveAndFlush(configEntityToSave);
 
-        // Retornar el DTO del terminal guardado
         return terminalConfigMapper.mapToDTO(savedEntity);
     }
 
-    // Obtener una configuración de terminal por terminalId y código
+
     public ConfigTerminalDTO getConfigTerminal(String terminalId, String code) {
         TerminalConfigEntity entity = terminalConfigRepository.findByTerminalIdAndCode(terminalId, code);
         if (entity == null) {
@@ -74,7 +70,6 @@ public class TerminalConfigService {
         return terminalConfigMapper.mapToDTO(entity);
     }
 
-    // Obtener todas las configuraciones de un terminal por terminalId
     public List<ConfigTerminalDTO> getConfigsByTerminalId(String terminalId) {
         List<TerminalConfigEntity> entities = terminalConfigRepository.findByTerminalEntity_Id(terminalId);
         return terminalConfigMapper.mapToDTO(entities);

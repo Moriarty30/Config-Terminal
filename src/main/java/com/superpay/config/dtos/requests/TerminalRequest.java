@@ -21,4 +21,6 @@ public class TerminalRequest {
     private String commerceId;
     @JsonProperty(value = "paymentMethods")
     private List<String> paymentMethods;
+    @JsonProperty(value = "configs")
+    private List<String> configs;
 }
