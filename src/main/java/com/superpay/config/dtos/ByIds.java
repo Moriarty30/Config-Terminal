@@ -14,12 +14,10 @@ import java.util.List;
 public class ByIds {
 
     private List<String> ids;
-
-
     public List<String> getIds() {
         return ids;
     }
 
-
 }
+
 

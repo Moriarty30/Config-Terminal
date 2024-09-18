@@ -19,4 +19,6 @@ public class CommerceRequest {
     private String nit;
     @JsonProperty(value = "enabled")
     private Boolean enabled;
+    @JsonProperty(value = "address")
+    private String address;
 }

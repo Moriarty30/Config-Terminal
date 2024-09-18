@@ -1,6 +1,7 @@
 package com.superpay.config.entity;
 
 
+import com.superpay.config.mappers.TerminalConfigMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,6 +37,7 @@ public class CommerceEntity {
     private String address;
     @Column(name = "created_at")
     @Builder.Default private LocalDateTime createdAt = LocalDateTime.now();
-    @OneToMany(mappedBy = "commerceEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "commerceEntity", fetch = FetchType.EAGER)
     private List<TerminalEntity> terminals;
+
 }

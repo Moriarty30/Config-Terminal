@@ -30,7 +30,7 @@ public class TerminalEntity {
     @Column(name = "created_at")
     @Builder.Default private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "commerce_id", nullable = false)
     private CommerceEntity commerceEntity;
 

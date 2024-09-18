@@ -1,18 +1,22 @@
 package com.superpay.config.service;
 
 import com.superpay.config.dtos.ConfigTerminalDTO;
+import com.superpay.config.dtos.TerminalDTO;
 import com.superpay.config.dtos.requests.ConfigTerminalRequest;
 import com.superpay.config.entity.TerminalConfigEntity;
 import com.superpay.config.entity.TerminalEntity;
 import com.superpay.config.mappers.TerminalConfigMapper;
+import com.superpay.config.mappers.TerminalMapper;
 import com.superpay.config.repository.TerminalConfigRepository;
 import com.superpay.config.repository.TerminalRepository;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TerminalConfigService {
@@ -26,7 +30,11 @@ public class TerminalConfigService {
     @Autowired
     private TerminalRepository terminalRepository;
 
+    @Autowired
+    private TerminalMapper terminalMapper;
 
+
+    //Metodo para crear una configuración en caso de que no exista, o actualizarla en caso de que ya exista
     public ConfigTerminalDTO createOrUpdateTerminalConfig(ConfigTerminalRequest request) {
 
         TerminalEntity terminalEntity = terminalRepository.findById(request.getTerminalId()).orElse(null);
@@ -54,8 +62,6 @@ public class TerminalConfigService {
                     .createdAtTz(LocalDateTime.now())
                     .build();
         }
-
-
         TerminalConfigEntity savedEntity = terminalConfigRepository.saveAndFlush(configEntityToSave);
 
         return terminalConfigMapper.mapToDTO(savedEntity);
@@ -70,8 +76,15 @@ public class TerminalConfigService {
         return terminalConfigMapper.mapToDTO(entity);
     }
 
-    public List<ConfigTerminalDTO> getConfigsByTerminalId(String terminalId) {
-        List<TerminalConfigEntity> entities = terminalConfigRepository.findByTerminalEntity_Id(terminalId);
-        return terminalConfigMapper.mapToDTO(entities);
+    public List<TerminalDTO> getTerminalsByConfigId(String configId) {
+        TerminalConfigEntity configEntity = terminalConfigRepository.findById(configId)
+                .orElseThrow(() -> new RuntimeException("Configuration not found with ID: " + configId));
+        //String terminalId = configEntity.getTerminalEntity().getId();
+        //System.out.println("TERMINAL ID"+ terminalId);
+        List<TerminalEntity> terminalEntities = terminalRepository.findByTerminalConfigs_Id(configEntity.getTerminalEntity().getId());
+        return terminalEntities.stream()
+                .map(terminalMapper::mapTerminalEntityToDTO)
+                .collect(Collectors.toList());
     }
+
 }

@@ -13,7 +13,11 @@ public interface PaymentMethodMapper {
     @Mapping(source = "code", target = "code")
     PaymentMethodDTO mapPaymentMethodEntityToDTO(PaymentMethodEntity paymentMethodEntity);
 
+    @Mapping(source = "paymentMethodEntity.id", target = "id")
+    @Mapping(source = "code", target = "code")
+    List<PaymentMethodDTO> mapPaymentMethodEntityToDTOs(List <PaymentMethodEntity> paymentMethodEntity);
+
     PaymentMethodEntity mapDTOToPaymentMethodEntity(PaymentMethodDTO paymentMethodDTO);
 
-    List<PaymentMethodDTO> toDtoList(List<PaymentMethodEntity> paymentMethodEntities);
+   // List<PaymentMethodDTO> toDtoList(List<PaymentMethodEntity> paymentMethodEntities);
 }

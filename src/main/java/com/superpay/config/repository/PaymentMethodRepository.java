@@ -11,13 +11,17 @@ import java.util.List;
 
 @Repository
 public interface PaymentMethodRepository extends JpaRepository<PaymentMethodEntity, String> {
-
+    /*
     @Query(value = "select pm.* from terminals_payment_methods tpm " +
             "left join terminals t on tpm.terminal_id = t.id " +
             "left join payment_methods pm on tpm.payment_method_id = pm.id " +
             "where t.code = (:terminalId) and t.enabled = true and pm.enabled = true", nativeQuery = true)
-    List<PaymentMethodEntity> getTerminalPaymentMethods(String terminalId);
 
-    @Query(value = "select * from payment_methods where id = :paymentMethodId or code =: paymentMethodId", nativeQuery = true)
-    PaymentMethodEntity getPaymentMethodEntitiesByid(@Param("paymentMethodId") List paymentMethodId);
+
+     */
+    @Query(value = "SELECT * FROM payment_methods WHERE id IN (:ids)", nativeQuery = true)
+    List<PaymentMethodEntity> getTerminalPaymentMethods(@Param("ids") List<String> ids);
+
+    @Query(value = "select * from payment_methods where id in (id) or code in (id)", nativeQuery = true)
+    PaymentMethodEntity getPaymentMethodEntitiesByid(@Param("id") String id);
 }

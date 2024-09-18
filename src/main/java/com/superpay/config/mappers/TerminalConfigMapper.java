@@ -24,10 +24,8 @@ public interface TerminalConfigMapper {
     @Mapping(source = "terminalEntity.id", target = "terminalId")
     ConfigTerminalDTO mapToDTO(TerminalConfigEntity entity);
 
-    TerminalConfigEntity mapToEntity(ConfigTerminalDTO dto);
 
     @Mapping(source = "terminalEntity.id", target = "terminalId")
     List<ConfigTerminalDTO> mapToDTO(List<TerminalConfigEntity> entities);
 
-    //List<TerminalConfigEntity> mapToEntity(List<ConfigTerminalDTO> dtos);
 }

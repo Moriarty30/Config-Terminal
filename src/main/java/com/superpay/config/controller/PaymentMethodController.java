@@ -1,4 +1,5 @@
 package com.superpay.config.controller;
+import com.superpay.config.dtos.ByIds;
 import com.superpay.config.dtos.PaymentMethodDTO;
 import com.superpay.config.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/config/terminal-payment-methods-method")
+@RequestMapping("/config/terminal-payment-methods")
 public class PaymentMethodController {
 
         @Autowired
@@ -23,15 +24,15 @@ public class PaymentMethodController {
             this.paymentMethodService = paymentMethodServise;
         }
 
-        @PostMapping
+        @PostMapping("/create-or-update")
         public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@RequestBody PaymentMethodDTO paymentMethodDTO) {
             PaymentMethodDTO createdPaymentMethod = paymentMethodService.createOrUpdatePaymentMethod(paymentMethodDTO);
             return ResponseEntity.ok(createdPaymentMethod);
         }
 
         @PostMapping("/by-ids")
-        public ResponseEntity<PaymentMethodDTO> getPaymentMethodById(@RequestBody PaymentMethodDTO paymentMethodDTO) {
-            PaymentMethodDTO createdPaymentMethod = paymentMethodService.getPaymentMethodById(paymentMethodDTO);
+        public ResponseEntity<List<PaymentMethodDTO>> getPaymentMethodById(@RequestBody ByIds byIds) {
+            List<PaymentMethodDTO> createdPaymentMethod = paymentMethodService.getPaymentMethodById(byIds);
             return ResponseEntity.ok(createdPaymentMethod);
         }
 
@@ -45,5 +46,7 @@ public class PaymentMethodController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+
 
 }

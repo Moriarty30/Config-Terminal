@@ -1,6 +1,7 @@
 package com.superpay.config.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.superpay.config.entity.TerminalEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class CommerceDTO {
     @JsonProperty(value = "address")
     private String address;
     @JsonProperty(value = "terminals")
-    private List<ConfigTerminalDTO> terminals;
+    private List<TerminalDTO> terminals;
+
 }
 

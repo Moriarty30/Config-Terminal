@@ -20,6 +20,13 @@ public interface CommerceMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     CommerceDTO mapDTOToCommerceEntity(CommerceEntity entity);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    CommerceDTO mapDTOsToCommerceEntity(CommerceEntity entity);
+
+
+
+
+
     /*
     @Named("mapCommerceEntListToDTOList")
     @IterableMapping(qualifiedByName = "mapCommerceEntToDTO")

@@ -1,5 +1,6 @@
 package com.superpay.config.service;
 
+import com.superpay.config.dtos.ByIds;
 import com.superpay.config.dtos.PaymentMethodDTO;
 import com.superpay.config.entity.PaymentMethodEntity;
 import com.superpay.config.entity.TerminalEntity;
@@ -38,9 +39,10 @@ public class PaymentMethodService {
     }
 
 
-    public PaymentMethodDTO getPaymentMethodById(PaymentMethodDTO paymentMethodDTO) {
-        PaymentMethodEntity paymentMethodEntity = paymentMethodRepository.findById(paymentMethodDTO.getId()).orElse(null);
-        return paymentMethodMapper.mapPaymentMethodEntityToDTO(paymentMethodEntity);
+    public List<PaymentMethodDTO> getPaymentMethodById(ByIds byIds) {
+        List<PaymentMethodEntity> paymentMethodEntity = paymentMethodRepository.getTerminalPaymentMethods(byIds.getIds());
+
+        return paymentMethodMapper.mapPaymentMethodEntityToDTOs(paymentMethodEntity);
     }
 
     public List<PaymentMethodDTO> getPaymentMethodsByTerminalCode(String code) {
@@ -54,7 +56,9 @@ public class PaymentMethodService {
                 .collect(Collectors.toList());
 
         List<PaymentMethodEntity> paymentMethodEntities = paymentMethodRepository.findAllById(paymentMethodIds);
-        return paymentMethodMapper.toDtoList(paymentMethodEntities);
+        return paymentMethodMapper.mapPaymentMethodEntityToDTOs(paymentMethodEntities);
     }
+
+
 
 }

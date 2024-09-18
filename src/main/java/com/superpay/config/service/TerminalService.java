@@ -103,9 +103,6 @@ public class TerminalService {
         }
     }
 
-
-
-
     public List<TerminalDTO> getTerminalsByIdsOrCodes(ByIds byIds) {
         List<TerminalEntity> terminalEntities = this.terminalRepository.getTerminalsByIdsOrCodes(byIds.getIds());
         List<TerminalDTO> terminalDTOS = new ArrayList<>();

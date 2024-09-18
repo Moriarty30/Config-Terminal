@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses =  {PaymentMethodMapper.class, TerminalConfigMapper.class})
 public interface TerminalMapper {
 
@@ -22,4 +24,8 @@ public interface TerminalMapper {
     @Mapping(target = "paymentMethods", ignore = true)
     @Mapping(target = "configs", ignore = true)
     TerminalEntity mapDTOToTerminalEntity(TerminalRequest request);
+
+    List<TerminalDTO> mapsTerminalEntityToDTO(List<TerminalEntity> terminalEntities);
+
+
 }
