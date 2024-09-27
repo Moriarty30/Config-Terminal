@@ -7,21 +7,82 @@
 	},
 	"item": [
 		{
-			"name": "Get pymentMethod",
+			"name": "Get configTerminal",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/terminals/terminal-1",
+					"raw": "http://localhost:8080/terminal-config/cac307f3-2a08-4b16-b512-a94267f0a955/WEBHOOK_NOTIFICATION_URL",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
-						"terminals",
-						"terminal-1"
+						"terminal-config",
+						"cac307f3-2a08-4b16-b512-a94267f0a955",
+						"WEBHOOK_NOTIFICATION_URL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get pymenthmethods x terminalCode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/config/terminal-payment-methods/26082",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"config",
+						"terminal-payment-methods",
+						"26082"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get teminals by configsId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/terminal-config/f253e9ad-a36f-4ff2-a9fa-6c844bb07d49",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"terminal-config",
+						"f253e9ad-a36f-4ff2-a9fa-6c844bb07d49"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get ComerceByIdorNit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/commerce/16770",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"commerce",
+						"16770"
 					]
 				}
 			},
@@ -34,7 +95,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"ids\": [\"26083\",\"26084\",\"26085\"]\r\n}",
+					"raw": "{\r\n    \"ids\": [\"26082\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -91,7 +152,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"code\": \"26085\",                        // Código único del terminal\r\n  \"enabled\": true,                        // Estado del terminal (habilitado o no)\r\n  \"commerceId\": \"e728c916-f312-4255-afbc-e46ae85a4d9f\",  // ID del comerciante asociado\r\n  \r\n  \"paymentMethods\": [\"5b5d1be1-3230-4c7f-8fb6-628b83ed1c00\"],\r\n\r\n  \"configs\": [                            // Lista de configuraciones del terminal\r\n    {\r\n      \"code\": \"WEBHOOK_NOTIFICATION_URL\",  // Código de configuración (por ejemplo, URL de notificaciones)\r\n      \"type\": \"STRING\",                    // Tipo de la configuración (STRING, INTEGER, etc.)\r\n      \"value\": \"https://webhook.site/eadad96f-d15f-4532-8e17-b21cc5d30390\"  // Valor de la configuración\r\n    }\r\n  ]\r\n}\r\n",
+					"raw": "{\r\n  \"code\": \"26060\",                        // Código único del terminal\r\n  \"enabled\": true,                        // Estado del terminal (habilitado o no)\r\n  \"commerceId\": \"1b90089d-8917-453c-ac90-3442fe2b031b\",  // ID del comerciante asociado\r\n  \r\n  \"paymentMethods\": [\"5b5d1be1-3230-4c7f-8fb6-628b83ed1c00\"],\r\n\r\n  \"configs\": [\"f9f902d2-3d3e-477b-9b2a-1e766bc2f872\"]\r\n\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -120,7 +181,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"nequi\",\r\n  \"code\": \"123456789\",\r\n  \"urlLogo\": \"www.google.com\",\r\n  \"enabled\": true\r\n}",
+					"raw": "            {\r\n                \"id\": \"a9fc0038-f3b0-4232-b9ad-7d93eeb5536e\",\r\n                \"name\": \"Crédito - Débito\",\r\n                \"code\": \"cards\",\r\n                \"enabled\": true,\r\n                \"urlLogo\": \"https://i.pngimg.me/thumb/f/720/comdlpng6953127.jpg\"\r\n            }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -128,14 +189,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/payment-method",
+					"raw": "http://localhost:8080/config/terminal-payment-methods/create-or-update",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"payment-method"
+						"config",
+						"terminal-payment-methods",
+						"create-or-update"
 					]
 				}
 			},
@@ -148,7 +211,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Superpagos\",\r\n    \"nit\":\"12345\",\r\n    \"enabled\": \"true\"\r\n}",
+					"raw": "{\r\n    \"name\": \"SuperGiros\",\r\n    \"nit\":\"16771\",\r\n    \"enabled\": \"true\",\r\n    \"address\": \"Cra 86 #25-83\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -194,6 +257,36 @@
 					"path": [
 						"terminal-config",
 						"create-or-update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get payment by id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ids\": [\"a9fc0038-f3b0-4232-b9ad-7d93eeb5536e\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/config/terminal-payment-methods/by-ids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"config",
+						"terminal-payment-methods",
+						"by-ids"
 					]
 				}
 			},

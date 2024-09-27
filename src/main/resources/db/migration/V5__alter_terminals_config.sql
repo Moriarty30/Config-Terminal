@@ -1,0 +1,1 @@
+ALTER TABLE terminals_configs ADD tag varchar(255);

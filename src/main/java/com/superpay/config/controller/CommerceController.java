@@ -28,7 +28,13 @@ public class CommerceController {
     @GetMapping("/{commerceIdOrNit}")
     @ResponseStatus(HttpStatus.OK)
     public CommerceDTO getCommerceByIdOrNit(@PathVariable String commerceIdOrNit) {
-        return this.commerceService.getCommerceByIdOrNit(commerceIdOrNit);
+        return this.commerceService.getTerminalByCommerce(commerceIdOrNit);
+    }
+
+    @GetMapping("/ListCommerce/{commerceIdOrNit}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CommerceDTO> getCommerceByNitorId(@PathVariable String commerceIdOrNit) {
+        return this.commerceService.getCommerceByNitOrId(commerceIdOrNit);
     }
 
 

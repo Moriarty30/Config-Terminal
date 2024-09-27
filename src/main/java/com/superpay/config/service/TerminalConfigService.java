@@ -5,6 +5,7 @@ import com.superpay.config.dtos.TerminalDTO;
 import com.superpay.config.dtos.requests.ConfigTerminalRequest;
 import com.superpay.config.entity.TerminalConfigEntity;
 import com.superpay.config.entity.TerminalEntity;
+import com.superpay.config.exception.CustomException;
 import com.superpay.config.mappers.TerminalConfigMapper;
 import com.superpay.config.mappers.TerminalMapper;
 import com.superpay.config.repository.TerminalConfigRepository;
@@ -34,57 +35,72 @@ public class TerminalConfigService {
     private TerminalMapper terminalMapper;
 
 
-    //Metodo para crear una configuración en caso de que no exista, o actualizarla en caso de que ya exista
-    public ConfigTerminalDTO createOrUpdateTerminalConfig(ConfigTerminalRequest request) {
-
-        TerminalEntity terminalEntity = terminalRepository.findById(request.getTerminalId()).orElse(null);
-        TerminalConfigEntity existingConfig = terminalConfigRepository.findByTerminalIdAndCode(request.getTerminalId(), request.getCode());
-
-        TerminalConfigEntity configEntityToSave;
-
-        if (existingConfig != null) {
-
-            existingConfig.setType(request.getType());
-            existingConfig.setValue(request.getValue());
-            existingConfig.setCreatedAt(LocalDateTime.now());
-            existingConfig.setCreatedAtTz(LocalDateTime.now());
-
-            configEntityToSave = existingConfig;
-        } else {
-
-            configEntityToSave = TerminalConfigEntity.builder()
-                    .id(UUID.randomUUID().toString())
-                    .terminalEntity(terminalEntity)
-                    .code(request.getCode())
-                    .type(request.getType())
-                    .value(request.getValue())
-                    .createdAt(LocalDateTime.now())
-                    .createdAtTz(LocalDateTime.now())
-                    .build();
-        }
-        TerminalConfigEntity savedEntity = terminalConfigRepository.saveAndFlush(configEntityToSave);
-
-        return terminalConfigMapper.mapToDTO(savedEntity);
+public ConfigTerminalDTO createOrUpdateTerminalConfig(ConfigTerminalRequest request) {
+    TerminalEntity terminalEntity;
+    try {
+        terminalEntity = terminalRepository.findById(request.getTerminalId())
+                .orElseThrow(() -> new CustomException("Terminal not found with ID: " + request.getTerminalId()));
+    } catch (Exception e) {
+        throw new CustomException("Error retrieving terminal: " + e.getMessage());
     }
 
+    TerminalConfigEntity existingConfig;
+    try {
+        existingConfig = terminalConfigRepository.findByTerminalIdAndCode(request.getTerminalId(), request.getCode());
+    } catch (Exception e) {
+        throw new CustomException("Error retrieving existing config: " + e.getMessage());
+    }
 
-    public ConfigTerminalDTO getConfigTerminal(String terminalId, String code) {
-        TerminalConfigEntity entity = terminalConfigRepository.findByTerminalIdAndCode(terminalId, code);
-        if (entity == null) {
-            throw new RuntimeException("No terminal config found with terminalId: " + terminalId + " and code: " + code);
+    TerminalConfigEntity configEntityToSave;
+    if (existingConfig != null) {
+        existingConfig.setType(request.getType());
+        existingConfig.setValue(request.getValue());
+        existingConfig.setCreatedAt(LocalDateTime.now());
+        existingConfig.setCreatedAtTz(LocalDateTime.now());
+        configEntityToSave = existingConfig;
+    } else {
+        configEntityToSave = TerminalConfigEntity.builder()
+                .id(UUID.randomUUID().toString())
+                .terminalEntity(terminalEntity)
+                .code(request.getCode())
+                .type(request.getType())
+                .value(request.getValue())
+                .createdAt(LocalDateTime.now())
+                .createdAtTz(LocalDateTime.now())
+                .build();
+    }
+
+    TerminalConfigEntity savedEntity;
+    try {
+        savedEntity = terminalConfigRepository.saveAndFlush(configEntityToSave);
+    } catch (Exception e) {
+        throw new CustomException("Error saving terminal config: " + e.getMessage());
+    }
+
+    return terminalConfigMapper.mapToDTO(savedEntity);
+}
+
+
+    public List<ConfigTerminalDTO> getConfigTerminal(String IdorCode) {
+        List<TerminalConfigEntity> entity = terminalConfigRepository.findByTerminalIdOrCode(IdorCode);
+        if (entity.isEmpty()) {
+            throw new RuntimeException("No terminal config found with " + IdorCode);
         }
         return terminalConfigMapper.mapToDTO(entity);
     }
 
-    public List<TerminalDTO> getTerminalsByConfigId(String configId) {
-        TerminalConfigEntity configEntity = terminalConfigRepository.findById(configId)
-                .orElseThrow(() -> new RuntimeException("Configuration not found with ID: " + configId));
-        //String terminalId = configEntity.getTerminalEntity().getId();
-        //System.out.println("TERMINAL ID"+ terminalId);
-        List<TerminalEntity> terminalEntities = terminalRepository.findByTerminalConfigs_Id(configEntity.getTerminalEntity().getId());
+    /*
+    public List<TerminalDTO> getTerminalsByConfigIdorCode(String configIdorcode) {
+        List<TerminalConfigEntity> configEntities = terminalConfigRepository.findByTerminalIdOrCode(configIdorcode);
+        if (configEntities.isEmpty()) {
+            throw new RuntimeException("No terminal config found with " + configIdorcode);
+        }
+        List<TerminalEntity> terminalEntities = configEntities.stream()
+                .flatMap(configEntity -> terminalRepository.findByTerminalConfigs_Id(configEntity.getTerminalEntity().getId()).stream())
+                .toList();
         return terminalEntities.stream()
                 .map(terminalMapper::mapTerminalEntityToDTO)
                 .collect(Collectors.toList());
     }
-
+    */
 }
