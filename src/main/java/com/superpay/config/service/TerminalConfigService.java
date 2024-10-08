@@ -9,7 +9,6 @@ import com.superpay.config.mappers.TerminalConfigMapper;
 import com.superpay.config.mappers.TerminalMapper;
 import com.superpay.config.repository.TerminalConfigRepository;
 import com.superpay.config.repository.TerminalRepository;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
