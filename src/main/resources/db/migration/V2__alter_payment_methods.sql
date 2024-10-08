@@ -1,0 +1,1 @@
+ALTER TABLE payment_methods ADD url_logo text;

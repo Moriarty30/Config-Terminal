@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -48,7 +47,7 @@ public class CommerceService {
         return this.commerceMapper.mapDTOToCommerceEntity(commerceEntitySaved);
     }
 
-    public CommerceDTO getCommerceByIdOrNit(String commerceIdOrNit) {
+    public CommerceDTO getTerminalByCommerce(String commerceIdOrNit) {
         CommerceEntity commerceEntities = this.commerceRepository.getCommerceByIdOrNit(commerceIdOrNit);
         if(commerceEntities == null) {
             throw new RuntimeException("Commerce not found with ID or NIT: " + commerceIdOrNit);
@@ -60,7 +59,11 @@ public class CommerceService {
         return commerceDTO;
     }
 
-
-
-
+    public List<CommerceDTO> getCommerceByNitOrId(String commerceIdOrNit) {
+        List<CommerceEntity> commerceEntities = this.commerceRepository.getCommerceByNitorId(commerceIdOrNit);
+        if(commerceEntities.isEmpty()) {
+            throw new RuntimeException("Commerce not found with ID or NIT: " + commerceIdOrNit);
+        }
+        return this.commerceMapper.mapDTOToCommerceEntityList(commerceEntities);
+    }
 }

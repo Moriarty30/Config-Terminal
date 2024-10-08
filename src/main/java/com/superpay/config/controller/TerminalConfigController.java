@@ -25,17 +25,20 @@ public class TerminalConfigController {
     }
 
     // Endpoint para obtener una configuración de terminal por terminalId y código
-    @GetMapping("/{terminalId}/{code}")
+    @GetMapping("/{IdorCode}")
     @ResponseStatus(HttpStatus.OK)
-    public ConfigTerminalDTO getTerminalConfig(@PathVariable String terminalId, @PathVariable String code) {
-        return terminalConfigService.getConfigTerminal(terminalId, code);
+    public List<ConfigTerminalDTO> getTerminalConfig(@PathVariable String IdorCode) {
+        return terminalConfigService.getConfigTerminal(IdorCode);
     }
 
+    /*
     // Endpoint para obtener todas las configuraciones de un terminal por terminalId
     @GetMapping("/{terminalId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<TerminalDTO> getConfigsByTerminalId(@PathVariable String terminalId) {
-        return terminalConfigService.getTerminalsByConfigId(terminalId);
+    public List<TerminalDTO> getConfigsByTerminalIdorCode(@PathVariable String terminalId) {
+        return terminalConfigService.getTerminalsByConfigIdorCode(terminalId);
     }
+    */
+
 
 }

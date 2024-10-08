@@ -1,6 +1,7 @@
 package com.superpay.config.controller;
 import com.superpay.config.dtos.ByIds;
 import com.superpay.config.dtos.PaymentMethodDTO;
+import com.superpay.config.dtos.requests.PaymentMethodRequest;
 import com.superpay.config.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ public class PaymentMethodController {
         }
 
         @PostMapping("/create-or-update")
-        public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@RequestBody PaymentMethodDTO paymentMethodDTO) {
-            PaymentMethodDTO createdPaymentMethod = paymentMethodService.createOrUpdatePaymentMethod(paymentMethodDTO);
+        public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@RequestBody PaymentMethodRequest paymentMethodRequest) {
+            PaymentMethodDTO createdPaymentMethod = paymentMethodService.createOrUpdatePaymentMethod(paymentMethodRequest);
             return ResponseEntity.ok(createdPaymentMethod);
         }
 
@@ -46,7 +47,5 @@ public class PaymentMethodController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
-
 
 }

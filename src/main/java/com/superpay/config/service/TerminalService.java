@@ -3,16 +3,15 @@ package com.superpay.config.service;
 import com.superpay.config.dtos.ByIds;
 import com.superpay.config.dtos.ConfigTerminalDTO;
 import com.superpay.config.dtos.TerminalDTO;
-import com.superpay.config.dtos.requests.ConfigTerminalRequest;
 import com.superpay.config.dtos.requests.TerminalRequest;
 import com.superpay.config.entity.*;
+import com.superpay.config.exception.CustomException;
 import com.superpay.config.mappers.TerminalConfigMapper;
 import com.superpay.config.mappers.TerminalMapper;
 import com.superpay.config.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -43,35 +42,31 @@ public class TerminalService {
     public TerminalDTO createOrUpdateTerminal(TerminalRequest terminalRequest) {
         TerminalEntity terminalEntityToSave = this.terminalMapper.mapDTOToTerminalEntity(terminalRequest);
 
-        CommerceEntity commerceEntity = this.commerceRepository.findById(terminalRequest.getCommerceId()).orElse(null);
+        CommerceEntity commerceEntity = this.commerceRepository.findById(terminalRequest.getCommerceId())
+                .orElseThrow(() -> new CustomException("Commerce not found with ID: " + terminalRequest.getCommerceId()));
         terminalEntityToSave.setCommerceEntity(commerceEntity);
 
         TerminalEntity terminalEntitySaved = this.terminalRepository.saveAndFlush(terminalEntityToSave);
 
         List<TerminalConfigEntity> terminalConfigEntities = new ArrayList<>();
-        for(String configId : terminalRequest.getConfigs()){
-            TerminalConfigEntity terminalConfigEntity = this.terminalConfigRepository.findById(configId).orElse(null);
-            if(terminalConfigEntity != null){
-                this.assignTerminalConfig(terminalEntitySaved.getId(), configId);
-                terminalConfigEntities.add(terminalConfigEntity);
-            }
+        for (String configId : terminalRequest.getConfigs()) {
+            TerminalConfigEntity terminalConfigEntity = this.terminalConfigRepository.findById(configId)
+                    .orElseThrow(() -> new CustomException("Config not found with ID: " + configId));
+            this.assignTerminalConfig(terminalEntitySaved.getId(), configId);
+            terminalConfigEntities.add(terminalConfigEntity);
         }
+
         List<PaymentMethodEntity> paymentMethodEntities = new ArrayList<>();
         for (String paymentMethodId : terminalRequest.getPaymentMethods()) {
-            PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.findById(paymentMethodId).orElse(null);
-            if (paymentMethodEntity != null) {
-                this.assignPaymentMethod(terminalEntitySaved.getId(), paymentMethodId);
-                paymentMethodEntities.add(paymentMethodEntity);
-            }
+            PaymentMethodEntity paymentMethodEntity = this.paymentMethodRepository.findById(paymentMethodId)
+                    .orElseThrow(() -> new CustomException("Payment method not found with ID: " + paymentMethodId));
+            this.assignPaymentMethod(terminalEntitySaved.getId(), paymentMethodId);
+            paymentMethodEntities.add(paymentMethodEntity);
         }
         terminalEntitySaved.setPaymentMethods(paymentMethodEntities);
-
         terminalEntitySaved.setConfigs(terminalConfigEntities);
 
-
-
-        TerminalDTO test= this.terminalMapper.mapTerminalEntityToDTO(terminalEntitySaved);
-        return test;
+        return this.terminalMapper.mapTerminalEntityToDTO(terminalEntitySaved);
     }
 
     public void assignPaymentMethod(String terminalId, String paymentMethodId) {
@@ -104,18 +99,45 @@ public class TerminalService {
     }
 
     public List<TerminalDTO> getTerminalsByIdsOrCodes(ByIds byIds) {
-        List<TerminalEntity> terminalEntities = this.terminalRepository.getTerminalsByIdsOrCodes(byIds.getIds());
+        List<TerminalEntity> terminalEntities;
+        try {
+            terminalEntities = this.terminalRepository.getTerminalsByIdsOrCodes(byIds.getIds());
+        } catch (Exception e) {
+            throw new CustomException("Error retrieving terminals by IDs or codes: " + e.getMessage());
+        }
+
+        if (terminalEntities.isEmpty()) {
+            throw new CustomException("No terminals found with the provided IDs or codes.");
+        }
+
         List<TerminalDTO> terminalDTOS = new ArrayList<>();
         for (TerminalEntity terminalEntity : terminalEntities) {
-            List<TerminalPaymentMethodEntity> terminalAssigns = terminalPaymentMethodRepository.getTerminalPaymentMethodsByTerminalsIds(List.of(terminalEntity.getId()));
+            List<TerminalPaymentMethodEntity> terminalAssigns;
+            try {
+                terminalAssigns = terminalPaymentMethodRepository.getTerminalPaymentMethodsByTerminalsIds(List.of(terminalEntity.getId()));
+            } catch (Exception e) {
+                throw new CustomException("Error retrieving payment methods for terminal ID: " + terminalEntity.getId() + ". " + e.getMessage());
+            }
+
             List<String> paymentMethodsIds = terminalAssigns.stream().map(TerminalPaymentMethodEntity::getPaymentMethodId).distinct().toList();
-            List<PaymentMethodEntity> paymentMethodEntities = this.paymentMethodRepository.findAllById(paymentMethodsIds);
+            List<PaymentMethodEntity> paymentMethodEntities;
+            try {
+                paymentMethodEntities = this.paymentMethodRepository.findAllById(paymentMethodsIds);
+            } catch (Exception e) {
+                throw new CustomException("Error retrieving payment method entities: " + e.getMessage());
+            }
 
             List<TerminalPaymentMethodEntity> terminalPaymentMethodEntities = terminalAssigns.stream().filter(terminalPaymentMethodEntity -> terminalPaymentMethodEntity.getTerminalId().equals(terminalEntity.getId())).toList();
             List<PaymentMethodEntity> terminalPaymentMethods = terminalPaymentMethodEntities.stream().map(terminalPaymentMethodEntity -> paymentMethodEntities.stream().filter(paymentMethodEntity -> paymentMethodEntity.getId().equals(terminalPaymentMethodEntity.getPaymentMethodId())).findFirst().orElse(null)).toList();
             terminalEntity.setPaymentMethods(terminalPaymentMethods);
 
-            List<TerminalConfigEntity> terminalConfigEntities = this.terminalConfigRepository.getTerminalConfigs(terminalEntity.getId());
+            List<TerminalConfigEntity> terminalConfigEntities;
+            try {
+                terminalConfigEntities = this.terminalConfigRepository.getTerminalConfigs(terminalEntity.getId());
+            } catch (Exception e) {
+                throw new CustomException("Error retrieving terminal configs for terminal ID: " + terminalEntity.getId() + ". " + e.getMessage());
+            }
+
             List<ConfigTerminalDTO> terminalConfigs = this.terminalConfigMapper.map(terminalConfigEntities);
 
             TerminalDTO terminalDTO = this.terminalMapper.mapTerminalEntityToDTO(terminalEntity);
@@ -125,5 +147,4 @@ public class TerminalService {
         }
         return terminalDTOS;
     }
-
 }

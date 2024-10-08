@@ -1,6 +1,7 @@
 package com.superpay.config.mappers;
 
 import com.superpay.config.dtos.PaymentMethodDTO;
+import com.superpay.config.dtos.requests.PaymentMethodRequest;
 import com.superpay.config.entity.PaymentMethodEntity;
 import org.mapstruct.*;
 
@@ -17,7 +18,7 @@ public interface PaymentMethodMapper {
     @Mapping(source = "code", target = "code")
     List<PaymentMethodDTO> mapPaymentMethodEntityToDTOs(List <PaymentMethodEntity> paymentMethodEntity);
 
-    PaymentMethodEntity mapDTOToPaymentMethodEntity(PaymentMethodDTO paymentMethodDTO);
+    PaymentMethodEntity mapDTOToPaymentMethodEntity(PaymentMethodRequest patmentMethodRequest);
 
    // List<PaymentMethodDTO> toDtoList(List<PaymentMethodEntity> paymentMethodEntities);
 }

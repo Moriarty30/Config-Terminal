@@ -25,4 +25,7 @@ public interface CommerceRepository extends JpaRepository<CommerceEntity, String
     @Query(value = "select * from commerces where id = :commerceIdOrNit or nit = :commerceIdOrNit limit 1", nativeQuery = true)
     CommerceEntity getCommerceByIdOrNit(@Param("commerceIdOrNit") String commerceIdOrNit);
 
+    @Query(value = "select * from commerces where id = :commerceIdOrNit or nit = :commerceIdOrNit", nativeQuery = true)
+    List<CommerceEntity> getCommerceByNitorId(@Param("commerceIdOrNit") String commerceIdOrNit);
+
 }

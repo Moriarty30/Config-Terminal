@@ -18,18 +18,14 @@ public interface CommerceMapper {
 
     @Named("mapCommerceEntToDTO")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "terminals", ignore = true)
     CommerceDTO mapDTOToCommerceEntity(CommerceEntity entity);
 
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    CommerceDTO mapDTOsToCommerceEntity(CommerceEntity entity);
+    @Mapping(target = "terminals", ignore = true)
+    List<CommerceDTO> mapDTOToCommerceEntityList(List <CommerceEntity> entity);
 
 
 
-
-
-    /*
-    @Named("mapCommerceEntListToDTOList")
-    @IterableMapping(qualifiedByName = "mapCommerceEntToDTO")
-    List<CommerceDTO> mapCommerces(List<CommerceEntity> commerceEntityList);
-    */
 }

@@ -17,4 +17,7 @@ public interface TerminalConfigRepository extends JpaRepository<TerminalConfigEn
 
     @Query(value = "select * from terminals_configs where terminal_id = :terminalId and code = :code limit 1", nativeQuery = true)
     TerminalConfigEntity findByTerminalIdAndCode(@Param("terminalId") String terminalId, @Param("code") String code);
+
+    @Query(value = "select * from terminals_configs where terminal_id = :idorcode or code = :idorcode", nativeQuery = true)
+    List<TerminalConfigEntity> findByTerminalIdOrCode(@Param("idorcode") String idorcode);
 }
