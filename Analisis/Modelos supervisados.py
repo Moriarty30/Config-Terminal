@@ -259,8 +259,6 @@ print(f'Porcentaje de fraudes detectados: {porcentaje_fraudes:.2f}%')
 fraudes_por_usuario = resultados[resultados['fraude_predicho'] == 1].groupby('customer_name').size()
 print("numero de transacciones fraudulentas por usuario",fraudes_por_usuario)
 
-
-# Asegúrate de que 'dt_request_branch_tz' esté en formato datetime
 data['dt_request_branch_tz'] = pd.to_datetime(data['dt_request_branch_tz'])
 
 # Crear la columna 'mes' en el DataFrame original
