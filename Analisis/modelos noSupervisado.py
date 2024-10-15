@@ -9,6 +9,7 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.decomposition import PCA
+import plotly.express as px
 import numpy as np
 
 # Convertimos las fechas a formato datetime
@@ -23,10 +24,10 @@ data['branch_name_encoded'] = le.fit_transform(data['branch_name'].astype(str))
 data['trx_status_description_encoded'] = le.fit_transform(data['trx_status_description'].astype(str))
 data['masked_pan_encoded'] = le.fit_transform(data['masked_pan'].astype(str))
 data['source_ip_encoded'] = le.fit_transform(data['source_ip'].astype(str))
-data['billing_document_encode'] = le.fit_transform(data['billing_document'].astype(str))
+data['billing_document_encoded'] = le.fit_transform(data['billing_document'].astype(str))
 data['customer_name_encode'] = le.fit_transform(data['customer_name'].astype(str))
-data['router_id'] = le.fit_transform(data['router_id'].astype(str))
-data['customer_email'] = le.fit_transform(data['customer_email'].astype(str))
+data['router_id_encoded'] = le.fit_transform(data['router_id'].astype(str))
+data['customer_email_encoded'] = le.fit_transform(data['customer_email'].astype(str))
 
 
 #Cálculos de características adicionales (nuevas features)
@@ -74,7 +75,7 @@ data['transactions_per_hour'] = data.groupby(['customer_name', 'hour_of_day'])['
 data['transactions_per_hour'] = data['transactions_per_hour'].fillna(data['transactions_per_hour'].mean())
 
 
-# Reemplazamos algunas características menos relevantes por las nuevas características
+"""# Reemplazamos algunas características menos relevantes por las nuevas características
 features = ['total_amount', 'masked_pan_encoded', 'source_ip_encoded', 'avg_transaction_amount',
             'unique_ips', 'avg_time_diff', 'std_transaction_amount', 'transactions_per_hour']
 
@@ -91,15 +92,31 @@ data['kmeans_cluster'] = kmeans.fit_predict(X_scaled)
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
 
-# Graficar los resultados
-plt.figure(figsize=(10, 6))
-scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=data['kmeans_cluster'], cmap='viridis', s=50, alpha=0.7)
-legend1 = plt.legend(*scatter.legend_elements(), title="Clusters")
-plt.gca().add_artist(legend1)
-plt.title('Clusters visualizados con PCA - Mejora de Features')
-plt.xlabel('Componente Principal 1')
-plt.ylabel('Componente Principal 2')
-plt.show()
+# Agregar los componentes principales al DataFrame
+data['pca1'] = X_pca[:, 0]
+data['pca2'] = X_pca[:, 1]
+
+# Crear gráfico interactivo con Plotly
+fig = px.scatter(
+    data, 
+    x='pca1', 
+    y='pca2', 
+    color='kmeans_cluster', 
+    hover_data=['customer_name', 'billing_document', 'trx_id'],
+    title='Clusters visualizados con PCA - Mejora de Features'
+)
+
+# Personalizar el gráfico
+fig.update_layout(
+    xaxis_title='Componente 1',
+    yaxis_title='Componente 2',
+    title='Clustering de Usuarios basado en PCA'
+)
+
+# Mostrar el gráfico
+fig.show()
+s
+
 
 # Calcular métricas de evaluación
 from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
@@ -112,7 +129,8 @@ print(f'K-Means Metrics:')
 print(f'Silhouette Score: {silhouette_avg}')
 print(f'Davies-Bouldin Index: {davies_bouldin}')
 print(f'Calinski-Harabasz Index: {calinski_harabasz}')
-
+"""
+#Fin de kmeans
 """#Modelos no supervizado K-Means
 sum_amounts = {}
 count_transactions = {}
@@ -189,24 +207,36 @@ plt.show()
 """
 
 #Modelos no supervizado Isolation Forest
+# Definir las características de interés
+features = ['billing_document_encoded','trx_status_description_encoded','customer_email_encoded','total_amount', 'masked_pan_encoded', 'unique_ips', 'total_transactions']
 
-features = ['total_amount', 'masked_pan_encoded', 'unique_ips', 'total_transactions']
+# Función para aplicar Isolation Forest a cada usuario
+def detectar_transacciones_atipicas(data):
+    data['isolation_forest_outlier'] = 0  
+    
+    # Aplicar Isolation Forest a cada usuario por separado
+    for user, group in data.groupby('customer_name'):
+        if len(group) > 5:  # Aplicar solo si hay suficientes transacciones
+            iso_forest = IsolationForest(contamination=0.05, random_state=42)
+            group_features = group[features]
+            group['isolation_forest_outlier'] = iso_forest.fit_predict(group_features)
+            group['isolation_forest_outlier'] = group['isolation_forest_outlier'].apply(lambda x: 1 if x == -1 else 0)
+            data.loc[group.index, 'isolation_forest_outlier'] = group['isolation_forest_outlier']
+    
+    return data
 
-X_scaled = scaler.fit_transform(data[features])
+# Aplicar la función
+data = detectar_transacciones_atipicas(data)
 
-iso_forest = IsolationForest(contamination=0.05, random_state=42)
-data['isolation_forest_outlier'] = iso_forest.fit_predict(X_scaled)
-
-outliers_count = (data['isolation_forest_outlier'] == -1).sum()
-print(f'Number of outliers detected by Isolation Forest: {outliers_count}')
-
-data['isolation_forest_outlier'] = data['isolation_forest_outlier'].apply(lambda x: 1 if x == -1 else 0)
-
+# Filtrar las transacciones atípicas detectadas
 outliers = data[data['isolation_forest_outlier'] == 1]
 
-outlier_info = outliers[['customer_name', 'total_amount', 'source_ip', 'dt_request_branch_tz', 'billing_document']]
-
+# Mostrar los detalles de las transacciones atípicas
+outlier_info = outliers[['customer_name','billing_document', 'total_amount', 'source_ip', 'dt_request_branch_tz','trx_status_description']]
 print(outlier_info.head(10))
+
+# Opcional: Guardar los datos atípicos para análisis
+outlier_info.to_csv('transacciones_atipicas.csv', index=False)
 
 #Modelos no supervizado Clustering Jerárquico
 active_days = {}
@@ -219,7 +249,7 @@ for idx, row in data.iterrows():
 
 data['active_days'] = data['customer_name'].apply(lambda x: len(active_days[x]))
 
-
+"""
 features = ['total_amount', 'masked_pan_encoded', 'active_days', 'unique_ips']
 
 X_scaled = scaler.fit_transform(data[features])
@@ -227,9 +257,7 @@ X_scaled = scaler.fit_transform(data[features])
 clustering = AgglomerativeClustering(n_clusters=4)
 data['hierarchical_cluster'] = clustering.fit_predict(X_scaled)
 
-Z = linkage(X_scaled, method='ward')
-dendrogram(Z)
-plt.show()
+
 
 silhouette_avg_hierarchical = silhouette_score(X_scaled, data['hierarchical_cluster'])
 davies_bouldin_hierarchical = davies_bouldin_score(X_scaled, data['hierarchical_cluster'])
@@ -240,7 +268,7 @@ print(f'Silhouette Score: {silhouette_avg_hierarchical}')
 print(f'Davies-Bouldin Index: {davies_bouldin_hierarchical}')
 print(f'Calinski-Harabasz Index: {calinski_harabasz_hierarchical}')
 
-"""
+
 #Modelos no supervizado PCA
 approved_transactions = {}
 total_transactions = {}

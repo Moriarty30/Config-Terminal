@@ -108,10 +108,14 @@ def etiquetar_usuarios_riesgo(data):
     return data
 # Etiquetar usuarios con la función de riesgo
 data = etiquetar_usuarios_riesgo(data)
-
-# Discretizar los valores de riesgo en clases categóricas (por ejemplo: 0 = bajo riesgo, 1 = alto riesgo)
-# Si el riesgo es mayor que 0.5, consideramos que el usuario es de alto riesgo (1), de lo contrario, bajo riesgo (0)
 data['riesgo'] = data['riesgo'].apply(lambda x: 1 if x >= 0.5 else 0)
+
+# Función para agrupar usuarios por nombre y documento
+def agrupar_usuarios_unicos(data):
+    data['customer_name'] = data['customer_name'].str.lower().str.strip()
+    return data
+
+data = agrupar_usuarios_unicos(data)
 
 # Preprocesar las variables categóricas
 le = LabelEncoder()
@@ -123,92 +127,128 @@ features = ['merchant_name_encoded', 'branch_name_encoded', 'trx_status_descript
 X = data[features]
 y = data['riesgo']
 
-# División en conjunto de entrenamiento y prueba
+feature2 = ['merchant_name_encoded','merchant_id', 'trx_status_description_encoded', 'total_amount', 'masked_pan_encoded', 'source_ip_encoded',
+             'billing_document_encoded', 'customer_name_encoded','router_id_encoded', 'customer_email_encoded']
+
+X2 = data[feature2]
+y2 = data['riesgo']
+
+# División en conjunto de entrenamiento y prueba para ambos modelos
+X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, test_size=0.2, random_state=42)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Entrenar Random Forest
+# Entrenar el modelo Random Forest
 clf_rf = RandomForestClassifier(random_state=42)
 clf_rf.fit(X_train, y_train)
+
+# Entrenar el modelo XGBoost
+clf_xgb = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=3, random_state=42)
+clf_xgb.fit(X_train2, y_train2)
+
+# Predecir el riesgo de fraude para ambos modelos
 y_pred_rf = clf_rf.predict(X_test)
+y_proba_rf = clf_rf.predict_proba(X_test)[:, 1]
 
-# Entrenar Gradient Boosting
-clf_gb = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=3, random_state=42)
-clf_gb.fit(X_train, y_train)
-y_pred_gb = clf_gb.predict(X_test)
+y_pred_xgb = clf_xgb.predict(X_test2)
+y_proba_xgb = clf_xgb.predict_proba(X_test2)[:, 1]
 
-# Reporte de clasificación
-print("Gradient Boosting Classification Report:")
-print(classification_report(y_test, y_pred_gb))
-
-# Generar las probabilidades de fraude para cada transacción
-y_proba_rf = clf_rf.predict_proba(X_test)[:, 1]  # Probabilidad de fraude
-
-# Reporte de clasificación
-print("Random Forest Classification Report:")
-print(classification_report(y_test, y_pred_rf))
-
-# Matriz de confusión
-cm_rf = confusion_matrix(y_test, y_pred_rf)
-sns.heatmap(cm_rf, annot=True, fmt='d', cmap='Blues')
-plt.title('Matriz de Confusión - Random Forest')
-plt.show()
-
-
-# Creación del DataFrame con los resultados
-resultados = pd.DataFrame({
+# Creación del DataFrame con los resultados de Random Forest
+resultados_rf = pd.DataFrame({
     'customer_name': data.loc[X_test.index, 'customer_name'],
     'billing_document': data.loc[X_test.index, 'billing_document'],
+    'masked_pan': data.loc[X_test.index, 'masked_pan'],
     'probabilidad_fraude': y_proba_rf,
     'fraude_predicho': y_pred_rf
 })
 
-# 1. Usuarios con mayor probabilidad de fraude
-usuarios_fraude_riesgo = resultados[resultados['fraude_predicho'] == 1].sort_values(by='probabilidad_fraude', ascending=False)
-print("\nUsuarios con mayor probabilidad de fraude:")
-print(usuarios_fraude_riesgo.head(10))
-
-# 2. Listar las 10 transacciones con mayor probabilidad de fraude
-transacciones_fraude_riesgo = resultados.sort_values(by='probabilidad_fraude', ascending=False).head(10)
-print("\nLas 10 transacciones con mayor probabilidad de fraude:")
-print(transacciones_fraude_riesgo[['billing_document', 'probabilidad_fraude']])
-
-# 3. Porcentaje de fraude detectado
-total_fraudes_predichos = sum(y_pred_rf)
-total_transacciones = len(y_pred_rf)
-porcentaje_fraudes = (total_fraudes_predichos / total_transacciones) * 100
-print(f'\nPorcentaje de fraudes detectados: {porcentaje_fraudes:.2f}%')
-
-# 4. Número de transacciones fraudulentas por usuario
-fraudes_por_usuario = resultados[resultados['fraude_predicho'] == 1].groupby('customer_name').size()
-print("\nNúmero de transacciones fraudulentas por usuario:")
-print(fraudes_por_usuario)
-
-# 5. Fraudes por mes
-# Asegúrate de que 'dt_request_branch_tz' esté en formato datetime
-data['dt_request_branch_tz'] = pd.to_datetime(data['dt_request_branch_tz'])
-
-# Crear la columna 'mes' en el DataFrame original
-data['mes'] = data['dt_request_branch_tz'].dt.to_period('M')
-
-# Crear el DataFrame de resultados de predicciones con la columna 'mes'
-resultados = pd.DataFrame({
-    'customer_name': data.loc[X_test.index, 'customer_name'],
-    'billing_document': data.loc[X_test.index, 'billing_document'],
-    'probabilidad_fraude': y_proba_rf,
-    'fraude_predicho': y_pred_rf,
-    'mes': data.loc[X_test.index, 'mes']
+# Creación del DataFrame con los resultados de XGBoost
+resultados_xgb = pd.DataFrame({
+    'customer_name': data.loc[X_test2.index, 'customer_name'],
+    'billing_document': data.loc[X_test2.index, 'billing_document'],
+    'masked_pan': data.loc[X_test2.index, 'masked_pan'],
+    'probabilidad_fraude': y_proba_xgb,
+    'fraude_predicho': y_pred_xgb
 })
 
-# Filtrar solo las transacciones fraudulentas predichas
-transacciones_fraude = resultados[resultados['fraude_predicho'] == 1]
+# AGRUPAR POR USUARIO: Obtener promedio de probabilidad de fraude por usuario para ambos modelos
+fraude_por_usuario_rf = resultados_rf.groupby('customer_name').agg({
+    'probabilidad_fraude': 'mean',  # Promedio de probabilidad de fraude
+    'fraude_predicho': 'sum'  # Suma de las transacciones predichas como fraude
+}).reset_index()
 
-# Contar fraudes por mes
-fraudes_por_mes = transacciones_fraude.groupby('mes').size()
+fraude_por_usuario_xgb = resultados_xgb.groupby('customer_name').agg({
+    'probabilidad_fraude': 'mean',  # Promedio de probabilidad de fraude
+    'fraude_predicho': 'sum'  # Suma de las transacciones predichas como fraude
+}).reset_index()
 
-# Graficar fraudes por mes
+# Definir umbral para clasificar usuarios como de riesgo
+umbral_fraude = 0.5  # Ajustar este umbral según análisis
+fraude_por_usuario_rf['usuario_riesgo'] = fraude_por_usuario_rf['probabilidad_fraude'] > umbral_fraude
+fraude_por_usuario_xgb['usuario_riesgo'] = fraude_por_usuario_xgb['probabilidad_fraude'] > umbral_fraude
+
+# Usuarios con mayor probabilidad de cometer fraude
+usuarios_fraude_riesgo_rf = fraude_por_usuario_rf[fraude_por_usuario_rf['usuario_riesgo'] == True].sort_values(by='probabilidad_fraude', ascending=False)
+usuarios_fraude_riesgo_xgb = fraude_por_usuario_xgb[fraude_por_usuario_xgb['usuario_riesgo'] == True].sort_values(by='probabilidad_fraude', ascending=False)
+
+# Imprimir resultados de los usuarios de mayor riesgo
+print("Usuarios con mayor probabilidad de cometer fraude (Random Forest):")
+print(usuarios_fraude_riesgo_rf.head(10))
+
+print("Usuarios con mayor probabilidad de cometer fraude (XGBoost):")
+print(usuarios_fraude_riesgo_xgb.head(10))
+
+# Visualizar la distribución de los usuarios según su riesgo de fraude (Random Forest)
 plt.figure(figsize=(10, 6))
-fraudes_por_mes.plot(kind='bar', color='salmon')
-plt.title('Fraudes Detectados por Mes')
-plt.xlabel('Mes')
-plt.ylabel('Número de Fraudes')
+sns.histplot(fraude_por_usuario_rf['probabilidad_fraude'], kde=True, color='blue')
+plt.axvline(x=umbral_fraude, color='red', linestyle='--', label='Umbral de Riesgo (RF)')
+plt.title('Distribución de Probabilidad de Fraude por Usuario (Random Forest)')
+plt.xlabel('Probabilidad Promedio de Fraude por Usuario')
+plt.ylabel('Frecuencia')
+plt.legend()
 plt.show()
+
+# Visualizar la distribución de los usuarios según su riesgo de fraude (XGBoost)
+plt.figure(figsize=(10, 6))
+sns.histplot(fraude_por_usuario_xgb['probabilidad_fraude'], kde=True, color='green')
+plt.axvline(x=umbral_fraude, color='red', linestyle='--', label='Umbral de Riesgo (XGBoost)')
+plt.title('Distribución de Probabilidad de Fraude por Usuario (XGBoost)')
+plt.xlabel('Probabilidad Promedio de Fraude por Usuario')
+plt.ylabel('Frecuencia')
+plt.legend()
+plt.show()
+
+# Reportes de clasificación a nivel transacción
+print("Reporte de clasificación a nivel transacción (Random Forest):")
+print(classification_report(y_test, y_pred_rf))
+
+print("Reporte de clasificación a nivel transacción (XGBoost):")
+print(classification_report(y_test2, y_pred_xgb))
+
+# Porcentaje de fraudes detectados (Random Forest)
+total_fraudes_predichos_rf = sum(y_pred_rf)
+total_transacciones_rf = len(y_pred_rf)
+porcentaje_fraudes_rf = (total_fraudes_predichos_rf / total_transacciones_rf) * 100
+print(f'\nPorcentaje de fraudes detectados (Random Forest): {porcentaje_fraudes_rf:.2f}%')
+
+# Porcentaje de fraudes detectados (XGBoost)
+total_fraudes_predichos_xgb = sum(y_pred_xgb)
+total_transacciones_xgb = len(y_pred_xgb)
+porcentaje_fraudes_xgb = (total_fraudes_predichos_xgb / total_transacciones_xgb) * 100
+print(f'\nPorcentaje de fraudes detectados (XGBoost): {porcentaje_fraudes_xgb:.2f}%')
+
+# Número de transacciones fraudulentas por usuario (Random Forest)
+transacciones_fraudulentas_por_usuario_rf = resultados_rf[resultados_rf['fraude_predicho'] == 1].groupby('customer_name').size()
+print("\nNúmero de transacciones fraudulentas por usuario (Random Forest):")
+print(transacciones_fraudulentas_por_usuario_rf)
+
+# Número de transacciones fraudulentas por usuario (XGBoost)
+transacciones_fraudulentas_por_usuario_xgb = resultados_xgb[resultados_xgb['fraude_predicho'] == 1].groupby('customer_name').size()
+print("\nNúmero de transacciones fraudulentas por usuario (XGBoost):")
+print(transacciones_fraudulentas_por_usuario_xgb)
+
+# 5. Fraudes por mes
+data['mes'] = data['dt_request_branch_tz'].dt.to_period('M')
+
+# Filtrar solo las transacciones fraudulentas predichas
+transacciones_fraude_rf = resultados_rf[resultados_rf['fraude_predicho'] == 1]
+transacciones_fraude_xgb = resultados_xgb[resultados_xgb['fraude_predicho'] == 1]

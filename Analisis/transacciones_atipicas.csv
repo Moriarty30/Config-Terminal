@@ -1,0 +1,95 @@
+customer_name,billing_document,total_amount,source_ip,dt_request_branch_tz,trx_status_description
+fabio andres hernandez munoz,1117523966,200000,191.156.70.248,2024-04-30 12:14:31,Rechazada
+javier alexander reina orozco,85454596,40000,,2024-08-27 12:51:07,Rechazada
+javier marcelo gonzalez mercado,1069467192,30000,,2024-08-27 13:49:56,Rechazada
+javier marcelo gonzalez mercado,1069467192,30000,,2024-08-27 13:51:42,Rechazada
+diana marcela rizo *,1116158535,20000,181.49.251.81,2024-05-02 14:49:03,Rechazada
+juan david rodriguez portocarrero,1006197466,194000,186.102.9.226,2024-05-02 18:55:17,Aprobada
+edward fernando largacha mosquera,14675393,20000,191.106.218.78,2024-05-02 20:29:47,Rechazada
+hansel camilo navarro pinedo,1234097106,400000,152.204.159.237,2024-05-06 00:05:53,Rechazada
+sandra patricia beltran londono,1047421014,200000,186.99.128.110,2024-05-06 06:26:41,Rechazada
+juan pablo mendez *,1061712984,400000,191.156.43.238,2024-05-06 14:34:56,Aprobada
+angela maria bahamon rojas,55132012,20000,190.90.0.92,2024-05-07 18:06:08,Aprobada
+Commerce 01,1144071205-0,100,,2024-06-13 17:50:20,Aprobada
+Juan David Orejuela Bolanos,1144071205,21000,179.32.204.39,2024-08-27 20:59:28,Rechazada
+octavio obregon alvarez,6322370,20000,190.60.33.201,2024-05-10 08:06:00,Rechazada
+ricardo jesus molina moreno,1010142376,200000,191.156.47.31,2024-05-11 18:19:15,Aprobada
+angela maria bahamon rojas,55132012,20000,191.156.50.109,2024-05-12 18:17:38,Rechazada
+Mathias Suarez,1144071205,100,181.49.251.81,2024-08-28 09:02:39,Aprobada
+juan carlos consuegra granger,73086341,300000,191.156.246.39,2024-05-15 12:10:41,Rechazada
+ricardo jesus molina moreno,1010142376,300000,191.156.35.115,2024-05-17 00:16:43,Rechazada
+camilo esteban gomez villegas,1116262247,100000,186.98.47.44,2024-05-18 02:11:12,Aprobada
+nubia gomez jaimes,1048555313,200000,191.95.50.239,2024-05-19 09:31:53,Aprobada
+jair jose peralta reyes,88238654,20000,179.19.143.234,2024-05-20 12:53:14,Aprobada
+jaime andres tabango lopez,1063815630,50000,201.185.3.52,2024-05-20 17:54:27,Rechazada
+Diana Rizo,1116158535,2000000,,2024-06-19 11:34:16,Rechazada
+Diana Rizo,1116158535,5000000,,2024-06-19 11:36:46,Rechazada
+Juan David Orejuela Bolanos,80265579,100,181.49.251.81,2024-08-28 15:54:07,Aprobada
+carlos fernando llanos gasca,16379240,30300,,2024-08-28 11:05:45,Rechazada
+diana marcela rizo *,1116158535,20000,181.49.251.81,2024-08-29 09:39:05,Aprobada
+juan david orejuela bolanos,1144071205,100,179.32.223.198,2024-08-29 17:12:18,Rechazada
+omar enrique torres zuniga,7917660,400000,179.15.81.237,2024-09-14 09:51:42,Rechazada
+narelcy delcarmen vega padilla,22550573,350000,191.156.248.169,2024-09-16 09:16:21,Rechazada
+Diana Rizo,80265579,10000,,2024-07-22 08:41:15,Rechazada
+eliasid parra palmet,1102806293,152000,181.78.14.139,2024-08-31 18:22:45,Aprobada
+nubia gomez jaimes,1048555313,25000,191.156.244.226,2024-09-16 19:58:48,Rechazada
+nubia gomez jaimes,1048555313,20000,191.156.244.226,2024-09-16 20:05:22,Aprobada
+dayana maria gomez guerrero,1047487373,20000,190.109.1.34,2024-09-18 11:53:53,Rechazada
+javier marcelo gonzalez mercado,1069467192,20000,191.156.33.198,2024-09-26 11:18:57,Rechazada
+JUANOREJUELA,1144071205,24000,,2024-09-18 14:09:47,Desconocido
+gabriel enrique riveras martinez,1122117552,100000,191.156.147.243,2024-09-07 20:01:34,Rechazada
+Diana Rizo,80265579,100,181.49.251.81,2024-09-10 08:43:16,Rechazada
+nubia gomez jaimes,1048555313,20000,191.156.245.61,2024-09-10 09:25:05,Aprobada
+victor alberto banguera espana,1123314102,40000,179.19.215.3,2024-04-05 07:49:00,Aprobada
+angie paola gamarra gomez,1002033152,200000,191.156.240.43,2024-04-05 13:19:38,Aprobada
+edward fernando largacha mosquera,14675393,100000,191.106.129.96,2024-04-06 15:49:57,Aprobada
+jair jose peralta reyes,88238654,20000,179.19.23.234,2024-04-07 18:05:23,Rechazada
+ruben dario mosquera mosquera,1128724855,250000,191.156.47.50,2024-04-08 08:43:20,Aprobada
+victor andres jimenez lascarro,1044392583,50000,191.156.253.23,2024-04-09 18:27:49,Aprobada
+dilan fernando utria rossi,1042443137,150000,191.95.25.108,2024-04-12 15:45:53,Aprobada
+raul ignacio zapata navarro,10770596,20000,45.176.233.98,2024-04-12 20:49:56,Aprobada
+dilan fernando utria rossi,1042443137,20000,201.233.129.139,2024-04-13 13:40:16,Rechazada
+angela maria bahamon rojas,55132012,120000,191.156.240.199,2024-04-13 16:13:32,Rechazada
+luis carlos florez hortua,89001473,50000,191.106.195.203,2024-04-14 18:20:58,Rechazada
+ermita savina robinson bryan,23248780,80000,191.156.252.228,2024-04-17 14:38:13,Rechazada
+deimer mercado martinez,1123631063,20000,190.242.101.114,2024-04-19 07:44:51,Aprobada
+jhon anderson soto acuna,1045743888,15000,152.201.188.144,2024-04-20 07:24:21,Aprobada
+elkin dario avila teheran,8797051,390000,190.84.116.254,2024-04-21 19:13:41,Rechazada
+alba patricia alba patricia gomez morales morales,66762054,20000,200.6.180.138,2024-04-22 09:37:46,Aprobada
+juan carlos consuegra granger,73086341,240000,170.0.10.197,2024-04-25 11:35:28,Aprobada
+sandra tapasco *,66919686,260000,181.63.178.42,2024-04-26 17:04:39,Aprobada
+pedro luis pelayo almanza,10951196,30000,181.71.69.54,2024-04-28 10:53:39,Rechazada
+marlon andres jaime medina,1091658481,42000,190.61.45.66,2024-06-04 09:47:22,Rechazada
+alba patricia alba patricia gomez morales morales,66762054,60000,186.146.133.164,2024-06-15 17:02:03,Aprobada
+elkin dario avila teheran,8797051,35000,190.84.116.254,2024-05-23 16:23:16,Aprobada
+juan david garcia calderon,1140896921,20000,191.156.249.61,2024-07-18 12:51:33,Aprobada
+john dejesus ortiz osorio,1140848308,400000,191.95.50.33,2024-05-25 07:11:44,Aprobada
+karol aguirre castro,1087130560,400000,181.63.178.76,2024-07-18 18:04:57,Rechazada
+carlos mario gonzalez sarabia,73139282,23000,161.10.58.254,2024-05-28 19:32:54,Rechazada
+orlando zapata palacios,16688250,20000,191.95.51.30,2024-08-01 19:35:29,Rechazada
+diana marcela rizo *,1116158535,75500,190.66.121.41,2024-06-21 14:56:14,Aprobada
+didier jesus vega hoyos,1140850460,250000,181.49.77.202,2024-07-10 09:54:56,Rechazada
+sandra luz bravo delgado,66747381,40000,170.238.236.214,2024-07-20 11:58:07,Aprobada
+dilan fernando utria rossi,1042443137,70000,191.95.29.234,2024-06-23 07:58:31,Rechazada
+bayron styven duran rodriguez,1091353310,50000,181.54.84.90,2024-06-08 12:36:26,Rechazada
+tanisha shalimar johnson newball,1143138879,20000,186.82.87.149,2024-05-30 19:59:13,Rechazada
+wilmer enrique pertuz gonzalez,1045732535,80000,186.169.195.132,2024-06-08 15:13:19,Rechazada
+javier marcelo gonzalez mercado,1069467192,30000,191.156.156.219,2024-05-31 09:42:40,Rechazada
+carlos mario gonzalez sarabia,73139282,40000,186.168.175.20,2024-07-11 20:30:32,Aprobada
+orlando zapata palacios,16688250,20000,191.106.172.62,2024-08-05 11:45:44,Rechazada
+julio enrique pino romero,72004737,200000,186.169.134.148,2024-07-12 14:58:13,Aprobada
+angela maria bahamon rojas,55132012,50000,191.156.233.45,2024-08-16 16:18:58,Aprobada
+orlando zapata palacios,16688250,50000,186.86.52.150,2024-07-13 11:28:09,Aprobada
+cristhiam mahecha romero,6106835,20000,191.106.134.66,2024-07-23 17:14:31,Aprobada
+pablo eugenio alzate salazar,10281260,100000,190.157.42.83,2024-07-14 16:06:51,Rechazada
+yacson cordoba penaloza,1075023266,200000,138.84.41.125,2024-06-28 11:20:19,Rechazada
+angela maria bahamon rojas,55132012,50000,191.156.50.88,2024-06-29 01:12:54,Rechazada
+aura nazareth micolta herrera,27127420,50000,179.19.214.155,2024-07-26 20:20:46,Rechazada
+diego fernando pineda solis,1086045777,150000,138.84.41.193,2024-06-02 18:56:29,Aprobada
+angela maria bahamon rojas,55132012,50000,190.90.0.90,2024-06-03 08:27:30,Rechazada
+eulices iriarte escobar,73118698,350000,186.82.87.63,2024-07-27 19:01:49,Aprobada
+juan felipe echeverry diaz,1067899745,31000,191.108.157.133,2024-10-04 08:43:25,Aprobada
+adaluz beltran *,1002012981,55000,191.156.240.202,2024-08-21 13:12:17,Aprobada
+anglen estiven penaranda perez,1005074497,400000,38.196.178.16,2024-08-23 14:21:41,Rechazada
+mauricio castellanos hincapie,75094147,200000,181.52.195.214,2024-08-24 18:43:43,Rechazada
+carlos mario gonzalez sarabia,73139282,20700,191.156.65.12,2024-08-26 18:29:43,Rechazada
